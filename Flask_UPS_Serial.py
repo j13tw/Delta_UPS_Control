@@ -87,7 +87,7 @@ def connectDevice():
 		 	print ("輸出負載比 : " + str(outputPersent) + " %")
 		 	print("-----------------------------------------")
 		 	time.sleep(1)
-		# 	--> ST
+		# 	--> BRD
 		 	ser.write(b"~00P000BRD")
 		# 	ser.write(b'~00D01720170322;20200322')
 		 	s = ser.read(30)
