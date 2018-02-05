@@ -15,7 +15,7 @@ def connectDevice():
 		 	print("-----------------------------------------")
 		#	--> STI 輸入資料
 		 	ser.write(b"~00P000STI")                       		# write a UPS RS232 format string
-		# 	ser.write(bytes(b'~00D0101;600;2190')   			# Return data format 1 Test
+		# 	ser.write(bytes(b'~00D0101;600;2190'))   			# Return data format 1 Test
 		# 	ser.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
 		 	s = ser.read(30)        							# read up to return data 30 bytes (timeout)
 		# 	print(s)
