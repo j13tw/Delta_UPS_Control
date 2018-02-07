@@ -151,7 +151,7 @@ class jsonReturn(Resource):
  		global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPersent
  		global lastBattery_Year, lastBattery_Mon, lastBattery_Day
  		global nextBattery_Year, nextBattery_Mon, nextBattery_Day
- 		return { "connect" : serialName, "input" : [{ "inputLine" : str(inputLine), "inputFreq" : str(inputFreq), "inputVolt" : str(inputVolt) }], "output" : [{ "systemMode" : systemMode, "outputLine" : str(outputLine), "outputFreq" : str(outputFreq), "outputVolt" : str(outputVolt), "outputAmp" : str(outputAmp), "outputWatt" : str(outputWatt), "outputPersent" : str(outputPersent)}], "battary" : [{ "lastBattery_Year" : str(lastBattery_Year), "lastBattery_Mon" : str(lastBattery_Mon), "lastBattery_Day" : str(lastBattery_Day)}, { "nextBattery_Year" : str(nextBattery_Year), "nextBattery_Mon" : str(nextBattery_Mon), "nextBattery_Day" : str(nextBattery_Day)}]}		
+ 		return { "connect" : serialName, "input" : [{ "inputLine" : str(inputLine), "inputFreq" : str(inputFreq), "inputVolt" : str(inputVolt) }], "output" : [{ "systemMode" : systemMode, "outputLine" : str(outputLine), "outputFreq" : str(outputFreq), "outputVolt" : str(outputVolt), "outputAmp" : str(outputAmp), "outputWatt" : str(outputWatt), "outputPersent" : str(outputPersent)}], "battery" : [{ "lastBattery_Year" : str(lastBattery_Year), "lastBattery_Mon" : str(lastBattery_Mon), "lastBattery_Day" : str(lastBattery_Day)}, { "nextBattery_Year" : str(nextBattery_Year), "nextBattery_Mon" : str(nextBattery_Mon), "nextBattery_Day" : str(nextBattery_Day)}]}		
 api.add_resource(jsonReturn, '/')
  
 @app.route("/show")
