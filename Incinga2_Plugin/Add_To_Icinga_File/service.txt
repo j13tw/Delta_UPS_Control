@@ -1,0 +1,8 @@
+apply Service "check_ups_status"{
+	import "generic-service"
+
+        check_command = "check_ups_status"
+
+        assign where host.address && host.name == "UPS_Monitor"
+
+}

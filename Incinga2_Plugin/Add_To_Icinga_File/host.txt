@@ -1,0 +1,11 @@
+object Host "UPS_Monitor"{
+
+	import "generic-host"
+
+	display_name="UPS_Monitor"
+
+	address = "127.0.0.1"
+
+	check_command="hostalive"
+
+}

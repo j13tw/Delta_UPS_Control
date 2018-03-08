@@ -1,0 +1,5 @@
+1. Run Your UPS Monitor Service
+2. Find Your UPS Monitor Host IP & Port
+3. Change "http_Response.py" python File Service IP & Port
+4. Open the terminal Enter command "python http_Response.py"
+5. Get the Full Information UPS Status Return json value on Terminal By the IP
