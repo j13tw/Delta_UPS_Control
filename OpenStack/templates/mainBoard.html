@@ -1,0 +1,37 @@
+<!DOCTYPE html>  
+<html>  
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF8">
+    <meta http-equiv="refresh" content="8">
+    <title>UPS 監控看板</title>
+</head>
+<script type="text/javascript">
+	//{{ 資料 }} <-- Flask render_template 參數傳遞
+	document.write("服務終端 IP : " + "{{hostname}}" + ":" + "{{port}}" + "<br />")
+	document.write("UPS 連接位置 : " + "{{serName}}" + "<br />")
+	document.write("--------------------------------------------<br />")
+	document.write("輸入線路 : " + {{inputLine}} + " 號線路<br />")
+	document.write("輸入頻率 : " + {{inputFreq}} + " Hz<br />")
+	document.write("輸入電壓 : " + {{inputVolt}} + " V<br />")
+	document.write("--------------------------------------------<br />")
+	document.write("輸出狀態 : " + "{{systemMode}}" + "<br />")
+	document.write("輸出線路 : " + {{outputLine}}+ " 號線路<br />")
+	document.write("輸出頻率 : " + {{outputFreq}}+ " Hz<br />")
+	document.write("輸出電壓 : " + {{outputVolt}} + " V<br />")
+	document.write("輸出電流 : " + {{outputAmp}} + " A<br />")
+	document.write("輸出瓦特 : " + {{outputWatt}} + " KW<br />")
+	document.write("輸出負載比 : " + {{outputPersent}} + " %<br />")
+	document.write("--------------------------------------------<br />")
+	document.write("電池更換時間 : " + {{lastBattery_Year}} + " 年 " + {{lastBattery_Mon}} + " 月 " + {{lastBattery_Day}} + " 日<br />")
+	document.write("下次更換時間 : " + {{nextBattery_Year}} + " 年 " + {{nextBattery_Mon}} + " 月 " + {{nextBattery_Day}} + " 日<br />")
+	document.write("--------------------------------------------<br />")
+</script>
+  <body>
+	
+  </body>  
+</html>  
+
+
+
+
+
