@@ -19,7 +19,15 @@ outputFreq = 0
 outputVolt = 0
 outputWatt = 0
 outputAmp = 0
-outputPersent = 0
+outputPercent = 0
+batteryHealth = ''
+batteryStatus = ''
+batteryMode = ''
+batteryRemain_min = ''
+batteryRemain_sec = ''
+batteryVolt = 0
+batteryTemp = 0
+batteryRemain_percent = 0
 lastBattery_Year = 0
 lastBattery_Mon = 0
 lastBattery_Day = 0
@@ -28,12 +36,15 @@ nextBattery_Mon = 0
 nextBattery_Day = 0
 hostname = ''
 port = ''
+hostHealth = ''
 
 def connectDevice():
-	global hostname, port
+	global hostname, port, hostHealth
 	global connect, systemMode
 	global inputLine, inputFreq, inputVolt
-	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPersent
+	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
+	global batteryHealth, batteryStatus, batteryMode
+	global batteryRemain_min, batteryRemain_sec, batteryVolt, batteryTemp, batteryRemain_percent
 	global lastBattery_Year, lastBattery_Mon, lastBattery_Day
 	global nextBattery_Year, nextBattery_Mon, nextBattery_Day
 	
@@ -59,8 +70,17 @@ def connectDevice():
 	#		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
 	#		change the json key to local temp value
 			connect = key['connect']
-			lastBattery = key['battery'][0]
-			nextBattery = key['battery'][1]
+			status = key['battery'][0]['status'][0]
+			batteryHealth = status['batteryHealth']
+			batteryStatus = status['batteryStatus']
+			batteryMode = status['batteryMode']
+			batteryRemain_min = status['batteryRemain_min']
+			batteryRemain_sec = status['batteryRemain_sec']
+			batteryVolt = status['batteryVolt']
+			batteryTemp = status['batteryTemp']
+			batteryRemain_percent = status['batteryRemain_percent']
+			lastBattery = key['battery'][1]
+			nextBattery = key['battery'][2]
 			inputStatus = key['input'][0]
 			outputStatus = key['output'][0]
 			inputLine = inputStatus['inputLine']
@@ -72,30 +92,36 @@ def connectDevice():
 			outputVolt = outputStatus['outputVolt']
 			outputAmp = outputStatus['outputAmp']
 			outputWatt = outputStatus['outputWatt']
-			outputPersent = outputStatus['outputPersent']
+			outputPercent = outputStatus['outputPercent']
 			lastBattery_Year = lastBattery['lastBattery_Year']
 			lastBattery_Mon = lastBattery['lastBattery_Mon']
 			lastBattery_Day = lastBattery['lastBattery_Day']
 			nextBattery_Year = nextBattery['nextBattery_Year']
 			nextBattery_Mon = nextBattery['nextBattery_Mon']
 			nextBattery_Day = nextBattery['nextBattery_Day']
+			hostHealth = 'Alive'
 		else:
 		   	print ('http://' + hostname +':' + port + ' Service Port Found !')
+		   	hostHealth = 'Port Error'
 	else:
 	  	print ('http://', hostname, ' Server IP Not Found !')
+	  	hostHealth = 'IP Error'
 
-@app.route("/")
+@app.route('/')
 def dashBoard():
-	global hostname, port
+	global hostname, port, hostHealth
 	global connect, systemMode
 	global inputLine, inputFreq, inputVolt
-	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPersent
+	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
+	global batteryHealth, batteryStatus, batteryMode
+	global batteryRemain_min, batteryRemain_sec, batteryVolt, batteryTemp, batteryRemain_percent
 	global lastBattery_Year, lastBattery_Mon, lastBattery_Day
 	global nextBattery_Year, nextBattery_Mon, nextBattery_Day
 	connectDevice()
 	return render_template('mainBoard.html', \
 		 		hostname = hostname, \
 		 		port = port, \
+		 		hostHealth = hostHealth, \
 		 		serName = str(connect), \
 		 		inputVolt = inputVolt, \
 		 		inputFreq = inputFreq, \
@@ -104,9 +130,17 @@ def dashBoard():
 				outputLine = outputLine, \
 				outputVolt = outputVolt, \
 				outputAmp = Decimal(outputAmp)*1, \
-		 		outputPersent = outputPersent, \
+		 		outputPercent = outputPercent, \
 		 		outputWatt = int(outputWatt)/1000, \
 		 		outputFreq = outputFreq, \
+		 		batteryHealth = batteryHealth, \
+		 		batteryStatus = batteryStatus, \
+		 		batteryMode = batteryMode, \
+		 		batteryRemain_min = batteryRemain_min, \
+		 		batteryRemain_sec = batteryRemain_sec, \
+		 		batteryVolt = batteryVolt, \
+		 		batteryTemp = batteryTemp, \
+		 		batteryRemain_percent = batteryRemain_percent, \
 		 		lastBattery_Year = lastBattery_Year, \
 		 		lastBattery_Mon = lastBattery_Mon, \
 		 		lastBattery_Day = lastBattery_Day, \
@@ -115,6 +149,6 @@ def dashBoard():
 		 		nextBattery_Day = nextBattery_Day, \
 		 		)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 #	app.run(debug = True)
-	app.run(host = "0.0.0.0")
+	app.run(host = '0.0.0.0')
