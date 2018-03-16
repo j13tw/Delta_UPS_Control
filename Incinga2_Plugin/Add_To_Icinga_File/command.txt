@@ -1,8 +1,7 @@
 object CheckCommand "check_ups_status" {
-  
 	command = [ SysconfDir + "/icinga2/scripts/check_ups_status.py" ]
-
 }
+
 object CheckCommand "check_ups_output_volt" {
     command = [ SysconfDir + "/icinga2/scripts/check_ups_output_volt.py" ]
 }

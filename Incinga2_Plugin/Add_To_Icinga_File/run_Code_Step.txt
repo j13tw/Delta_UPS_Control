@@ -4,7 +4,7 @@
 4. Open the terminal Enter command "python check_ups_status.py"
 5. Get the UPS SystemMode Status Return
 6. Check the code can run in your Icinga2 host computer
-7. Copy all file by name "check_ups_XXXXXXXX.py" to your Icinga Plugin script Folder (/etc/icinga2/scripts/)T
+7. Copy all file by name "check_ups_XXXXXXXX.py" to your Icinga Plugin script Folder (/etc/icinga2/scripts/)
 8. Terminal command "sudo chomd 777 check_ups_XXXXXXXX.py" with all your file in Folder /etc/icinga2/scripts/
 9. Copy the command.txt content add to Icinga Plugin command config File (/etc/icinga2/conf.d/commands.conf)
 10. Copy the service.txt content add to Icinga Plugin service config File (/etc/icinga2/conf.d/services.conf)
