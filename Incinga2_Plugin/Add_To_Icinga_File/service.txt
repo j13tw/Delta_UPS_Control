@@ -1,8 +1,28 @@
 apply Service "check_ups_status"{
 	import "generic-service"
+    check_command = "check_ups_status"
+    assign where host.address && host.name == "UPS_Monitor"
+}
+apply Service "check_ups_output_volt"{
+    import "generic-service"
+    check_command = "check_ups_output_volt"
+    assign where host.address && host.name == "UPS_Monitor"
+}
 
-        check_command = "check_ups_status"
+apply Service "check_ups_output_amp"{
+    import "generic-service"
+    check_command = "check_ups_output_amp"
+    assign where host.address && host.name == "UPS_Monitor"
+}
 
-        assign where host.address && host.name == "UPS_Monitor"
+apply Service "check_ups_output_watt"{
+    import "generic-service"
+    check_command = "check_ups_output_watt"
+    assign where host.address && host.name == "UPS_Monitor"
+}
 
+apply Service "check_ups_load_persent"{
+    import "generic-service"
+    check_command = "check_ups_load_persent"
+    assign where host.address && host.name == "UPS_Monitor"
 }

@@ -3,3 +3,18 @@ object CheckCommand "check_ups_status" {
 	command = [ SysconfDir + "/icinga2/scripts/check_ups_status.py" ]
 
 }
+object CheckCommand "check_ups_output_volt" {
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_output_volt.py" ]
+}
+
+object CheckCommand "check_ups_output_amp" {
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_output_amp.py" ]
+}
+
+object CheckCommand "check_ups_output_watt" {
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_output_watt.py" ]
+}
+
+object CheckCommand "check_ups_load_persent" {
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_load_persent.py" ]
+}
