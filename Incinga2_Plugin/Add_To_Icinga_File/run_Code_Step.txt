@@ -8,5 +8,7 @@
 8. Copy the command.txt content add to Icinga Plugin command config File (/etc/icinga2/conf.d/commands.conf)
 9. Copy the service.txt content add to Icinga Plugin service config File (/etc/icinga2/conf.d/services.conf)
 10.Copy the host.txt content add to Icinga Plugin host config File (/etc/icinga2/conf.d/hosts.conf)
-11.Open Terminal Enter command "systemctl restart icinga2"
-12.Open Terminal Enter command "systemctl status icinga2 -l" to debug the Error !
+11.Creat the "ping.txt" & "os.txt" in Folder "/var/tmp"
+12.Terminal command "sudo chmod 777 ping.txt os.txt" 
+13.Open Terminal Enter command "systemctl restart icinga2"
+14.Open Terminal Enter command "systemctl status icinga2 -l" to debug the Error !

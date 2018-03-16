@@ -26,19 +26,9 @@ if response == 0:						# check network sevice & server is on
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
 		outputStatus = key['output'][0]
-		systemMode = outputStatus['systemMode']
-		if systemMode == "Normal":
-			print ("System Status : "+ systemMode + " (AC plug-in)")
-			sys.exit(0)
-		if systemMode == "Battery":
-			print ("System Status : "+ systemMode)
-			sys.exit(1)
-		if systemMode == "Other":
-			print ("System Status : "+ systemMode)
-			sys.exit(2)
-		if systemMode == "No output":
-			print ("System Status : "+ systemMode)
-			sys.exit(3)
+		outputVolt = outputStatus['outputVolt']
+		print ("System output Volt : "+ outputVolt + " V")
+		sys.exit(0)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')
 	   	sys.exit(2)   
