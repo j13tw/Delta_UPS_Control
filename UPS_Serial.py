@@ -3,7 +3,7 @@ from decimal import getcontext, Decimal
 import serial, time
 
 getcontext().prec = 6
-with serial.Serial('COM3', 9600, timeout=1) as ser:			# select which your protocol & link path on UPS
+with serial.Serial('COM3', 2400, timeout=1) as ser:			# select which your protocol & link path on UPS
 	while(ser.isOpen()):
 		print("USB 連接位置 : " + ser.name)             	# check which port was really used
 		print("-----------------------------------------")
