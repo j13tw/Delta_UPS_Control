@@ -7,6 +7,7 @@
 </head>
 <script type="text/javascript">
 	//{{ 資料 }} <-- Flask render_template 參數傳遞
+	document.write("UPS Server Link : " + "{{hostname}}" + ":" + "{{port}}" + "(" + "{{hostHealth}}" + ")" + "<br />")
 	document.write("UPS 連接位置 : " + "{{serName}}" + "<br />")
 	document.write("--------------------------------------------<br />")
 	document.write("輸入線路 : " + {{inputLine}} + " 號線路<br />")
