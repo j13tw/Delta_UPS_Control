@@ -31,7 +31,7 @@ if response == 0:						# check network sevice & server is on
 			print ("System Status : "+ systemMode + " (AC plug-in)")
 			sys.exit(0)
 		if systemMode == "Battery":
-			print ("System Status : "+ systemMode)
+			print ("System Status : "+ systemMode + " (call user close service !)")
 			sys.exit(1)
 		if systemMode == "Other":
 			print ("System Status : "+ systemMode)
