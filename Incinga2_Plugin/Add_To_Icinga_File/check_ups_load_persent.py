@@ -28,10 +28,10 @@ if response == 0:						# check network sevice & server is on
 		outputStatus = key['output'][0]
 		outputPersent = outputStatus['outputPercent']
 		if(int(outputPersent)) <= 75:
-			print ("System output Usage Percent : "+ outputPercent + " %")
+			print ("System output Usage Percent : "+ outputPercent + " %| Usage=" + outputPercent + "%;80;90")
 			sys.exit(0)
 		else:
-			print ("System output Usage Percent : "+ outputPercent + " % (Load Too Heavy !)")
+			print ("System output Usage Percent : "+ outputPercent + " % (Load Too Heavy !)" + "| Usage=" + outputPercent + "%;80;90")
 			sys.exit(3)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')
