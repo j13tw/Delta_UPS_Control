@@ -26,12 +26,12 @@ if response == 0:						# check network sevice & server is on
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
 		outputStatus = key['output'][0]
-		outputPersent = outputStatus['outputPersent']
+		outputPersent = outputStatus['outputPercent']
 		if(int(outputPersent)) <= 75:
-			print ("System output Usage Percent : "+ outputPersent + " %")
+			print ("System output Usage Percent : "+ outputPercent + " %")
 			sys.exit(0)
 		else:
-			print ("System output Usage Percent : "+ outputPersent + " % (Load Too Heavy !)")
+			print ("System output Usage Percent : "+ outputPercent + " % (Load Too Heavy !)")
 			sys.exit(3)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')
