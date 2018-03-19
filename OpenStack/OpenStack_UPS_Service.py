@@ -22,7 +22,7 @@ outputAmp = 0
 outputPercent = 0
 batteryHealth = ''
 batteryStatus = ''
-batteryChrage_Mode = ''
+batteryCharge_Mode = ''
 batteryRemain_Min = ''
 batteryRemain_Sec = ''
 batteryVolt = 0
@@ -43,7 +43,7 @@ def connectDevice():
 	global connect, systemMode
 	global inputLine, inputFreq, inputVolt
 	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
-	global batteryHealth, batteryStatus, batteryChrage_Mode
+	global batteryHealth, batteryStatus, batteryCharge_Mode
 	global batteryRemain_Min, batteryRemain_Sec, batteryVolt, batteryTemp, batteryRemain_Percent
 	global lastBattery_Year, lastBattery_Mon, lastBattery_Day
 	global nextBattery_Year, nextBattery_Mon, nextBattery_Day
@@ -73,7 +73,7 @@ def connectDevice():
 			status = key['battery'][0]['status'][0]
 			batteryHealth = status['batteryHealth']
 			batteryStatus = status['batteryStatus']
-			batteryChrage_Mode = status['batteryChrage_Mode']
+			batteryCharge_Mode = status['batteryCharge_Mode']
 			batteryRemain_Min = status['batteryRemain_Min']
 			batteryRemain_Sec = status['batteryRemain_Sec']
 			batteryVolt = status['batteryVolt']
@@ -113,7 +113,7 @@ def dashBoard():
 	global connect, systemMode
 	global inputLine, inputFreq, inputVolt
 	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
-	global batteryHealth, batteryStatus, batteryChrage_Mode
+	global batteryHealth, batteryStatus, batteryCharge_Mode
 	global batteryRemain_Min, batteryRemain_Sec, batteryVolt, batteryTemp, batteryRemain_Percent
 	global lastBattery_Year, lastBattery_Mon, lastBattery_Day
 	global nextBattery_Year, nextBattery_Mon, nextBattery_Day
@@ -135,7 +135,7 @@ def dashBoard():
 		 		outputFreq = outputFreq, \
 		 		batteryHealth = batteryHealth, \
 		 		batteryStatus = batteryStatus, \
-		 		batteryChrage_Mode = batteryChrage_Mode, \
+		 		batteryCharge_Mode = batteryCharge_Mode, \
 		 		batteryRemain_Min = batteryRemain_Min, \
 		 		batteryRemain_Sec = batteryRemain_Sec, \
 		 		batteryVolt = batteryVolt, \
