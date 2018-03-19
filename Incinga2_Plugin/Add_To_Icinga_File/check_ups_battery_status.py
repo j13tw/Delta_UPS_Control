@@ -24,12 +24,12 @@ if response == 0:						# check network sevice & server is on
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
 		outputStatus = key['battery'][0]['status'][0]
-		batteryCharge_Mode = outputStatus['batteryCharge_Mode']
-		if batteryCharge_Mode == 'Discharging (未充電)' || batteryCharge_Mode == 'Resting (休眠)':
-			print ("Battery Charge Mode : "+ batteryCharge_Mode + "(Please checked the charge status !)")
+		batteryStatus = outputStatus['batteryStatus']
+		if batteryStatus == 'Low (低電量)' || batteryStatus == 'Depleted (耗盡)':
+			print ("Battery Status : "+ batteryStatus + "(Please Charge battery or Close Service now !)")
 			sys.exit(3)
 		else:
-			print ("Battery Charge Mode : "+ batteryCharge_Mode)
+			print ("Battery Status : "+ batteryStatus)
 			sys.exit(0)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')

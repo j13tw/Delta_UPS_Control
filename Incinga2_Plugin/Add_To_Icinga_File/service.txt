@@ -1,5 +1,5 @@
 apply Service "check_ups_status"{
-	import "generic-service"
+    import "generic-service"
     check_command = "check_ups_status"
     assign where host.address && host.name == "UPS_Monitor"
 }
@@ -25,5 +25,35 @@ apply Service "check_ups_output_watt"{
 apply Service "check_ups_load_persent"{
     import "generic-service"
     check_command = "check_ups_load_persent"
+    assign where host.address && host.name == "UPS_Monitor"
+}
+
+apply Service "check_ups_battery_volt"{
+    import "generic-service"
+    check_command = "check_ups_battery_volt"
+    assign where host.address && host.name == "UPS_Monitor"
+}
+
+apply Service "check_ups_battery_charge_mode"{
+    import "generic-service"
+    check_command = "check_ups_battery_charge_mode"
+    assign where host.address && host.name == "UPS_Monitor"
+}
+
+apply Service "check_ups_battery_temperature"{
+    import "generic-service"
+    check_command = "check_ups_battery_temperature"
+    assign where host.address && host.name == "UPS_Monitor"
+}
+
+apply Service "check_ups_battery_remain_percent"{
+    import "generic-service"
+    check_command = "check_ups_battery_remain_percent"
+    assign where host.address && host.name == "UPS_Monitor"
+}
+
+apply Service "check_ups_battery_status"{
+    import "generic-service"
+    check_command = "check_ups_battery_status"
     assign where host.address && host.name == "UPS_Monitor"
 }

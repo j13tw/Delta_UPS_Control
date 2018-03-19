@@ -1,6 +1,6 @@
 object CheckCommand "check_ups_status" {
 	
-	command = [ SysconfDir + "/icinga2/scripts/check_ups_status.py" ]
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_status.py" ]
 
 }
 
@@ -26,8 +26,50 @@ object CheckCommand "check_ups_output_watt" {
 
 }
 
-object CheckCommand "check_ups_load_persent" {
+object CheckCommand "check_ups_load_percent" {
 
     command = [ SysconfDir + "/icinga2/scripts/check_ups_load_percent.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_volt" {
+	
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_volt.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_battery_health" {
+
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_health.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_battery_charge_mode" {
+
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_charge_mode.py" ]
+
+}
+
+object CheckCommand "check_ups_battery_temperature" {
+
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_temperature.py" ]
+
+}
+
+object CheckCommand "check_ups_battery_remain_percent" {
+
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_remain_percent.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_status" {
+
+    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_status.py" ]
 
 }
