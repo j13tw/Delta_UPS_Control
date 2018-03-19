@@ -5,7 +5,7 @@ import os, sys
 import socket
 
 
-hostname = '127.0.0.1'					#chang to your service IP
+hostname = '10.0.0.164'					#chang to your service IP
 port = '5000'							#chang to your service Port
 
 localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
@@ -25,7 +25,10 @@ if response == 0:						# check network sevice & server is on
 		key = json.loads(value)
 		outputStatus = key['battery'][0]['status'][0]
 		batteryCharge_Mode = outputStatus['batteryCharge_Mode']
-		if batteryCharge_Mode == 'Discharging (未充電)' || batteryCharge_Mode == 'Resting (休眠)':
+		if batteryCharge_Mode == 'Discharging (未充電)':
+			print ("Battery Charge Mode : "+ batteryCharge_Mode + "(Please checked the Power Plug-in !)")
+			sys.exit(3)
+		elif batteryCharge_Mode == 'Resting (休眠)':
 			print ("Battery Charge Mode : "+ batteryCharge_Mode + "(Please checked the charge status !)")
 			sys.exit(3)
 		else:

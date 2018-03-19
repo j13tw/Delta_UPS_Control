@@ -5,7 +5,7 @@ import os, sys
 import socket
 
 
-hostname = '127.0.0.1'					#chang to your service IP
+hostname = '10.0.0.164'					#chang to your service IP
 port = '5000'							#chang to your service Port
 
 localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
@@ -25,8 +25,11 @@ if response == 0:						# check network sevice & server is on
 		key = json.loads(value)
 		outputStatus = key['battery'][0]['status'][0]
 		batteryStatus = outputStatus['batteryStatus']
-		if batteryStatus == 'Low (低電量)' || batteryStatus == 'Depleted (耗盡)':
+		if batteryStatus == 'Low (低電量)':
 			print ("Battery Status : "+ batteryStatus + "(Please Charge battery or Close Service now !)")
+			sys.exit(3)
+		elif batteryStatus == 'Depleted (耗盡)':
+			print ("Battery Status : "+ batteryStatus + "(The Battery has no any power !)")
 			sys.exit(3)
 		else:
 			print ("Battery Status : "+ batteryStatus)
