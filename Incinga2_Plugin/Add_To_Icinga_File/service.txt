@@ -57,3 +57,9 @@ apply Service "check_ups_battery_status"{
     check_command = "check_ups_battery_status"
     assign where host.address && host.name == "UPS_Monitor"
 }
+
+apply Service "check_ups_battery_health"{
+    import "generic-service"
+    check_command = "check_ups_battery_health"
+    assign where host.address && host.name == "UPS_Monitor"
+}
