@@ -11,10 +11,8 @@ port = '5000'							#chang to your service Port
 localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
 if(localOS == 0):
 	response = os.system('ping -c 1 ' + hostname + ' 2>&1 >/var/tmp/ping.txt')
-#	os.system('clear')
 else:
 	response = os.system('ping -n 1 ' + hostname + ' 2>&1 >ping.txt')
-#	os.system('cls')
 
 if response == 0:						# check network sevice & server is on
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,13 +24,13 @@ if response == 0:						# check network sevice & server is on
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
 		outputStatus = key['battery'][0]['status'][0]
-		batteryRemain_Percent = outputStatus['batteryRemain_Percent']
-		if(int(batteryRemain_Percent)) >= 30:
-			print ("Battery Remain Percent : "+ batteryRemain_Percent + " %| Battery Level=" + batteryRemain_Percent + "%;50;30")
-			sys.exit(0)
-		else:
-			print ("Battery Remain Percent : "+ batteryRemain_Percent + " % (Quick Close All Service !)" + "| Battery Level=" + batteryRemain_Percent + "%;50;30")
+		batteryCharge_mode = outputStatus['batteryCharge_Mode']
+		if batteryCharge_Mode == 'Discharging (未充電)' || batteryCharge_Mode == 'Resting (休眠)':
+			print ("Battery Charge Mode : "+ batteryCharge_Mode + "(Please checked the charge status !)")
 			sys.exit(3)
+		else:
+			print ("Battery Charge Mode : "+ batteryCharge_Mode)
+			sys.exit(0)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')
 	   	sys.exit(2)   

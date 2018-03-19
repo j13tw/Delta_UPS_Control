@@ -21,12 +21,12 @@ outputAmp = 0
 outputPercent = 0
 batteryHealth = ''
 batteryStatus = ''
-batteryMode = ''
-batteryRemain_min = ''
-batteryRemain_sec = ''
+batteryCharge_Mode = ''
+batteryRemain_Min = ''
+batteryRemain_Sec = ''
 batteryVolt = 0
 batteryTemp = 0
-batteryRemain_percent = 0
+batteryRemain_Percent = 0
 lastBattery_Year = 0
 lastBattery_Mon = 0
 lastBattery_Day = 0
@@ -42,8 +42,8 @@ def connectDevice():
 			global systemMode
 			global inputLine, inputFreq, inputVolt
 			global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
-			global batteryHealth, batteryStatus, batteryMode
-			global batteryRemain_min, batteryRemain_sec, batteryVolt, batteryTemp, batteryRemain_percent
+			global batteryHealth, batteryStatus, batteryCharge_Mode
+			global batteryRemain_Min, batteryRemain_Sec, batteryVolt, batteryTemp, batteryRemain_Percent
 			global lastBattery_Year, lastBattery_Mon, lastBattery_Day
 			global nextBattery_Year, nextBattery_Mon, nextBattery_Day
 			serialName = ser.name
@@ -154,32 +154,32 @@ def connectDevice():
 				batteryStatus = 'Depleted (耗盡)'
 			batteryCount = tmp[1]
 			if batteryCount == '0':
-				batteryMode = 'Floating charging (微量充電)'
+				batteryCharge_Mode = 'Floating charging (微量充電)'
 			if batteryCount == '1':
-				batteryMode = 'Boost charging (快速充電)'
+				batteryCharge_Mode = 'Boost charging (快速充電)'
 			if batteryCount == '2':
-				batteryMode = 'Resting (休眠)'
+				batteryCharge_Mode = 'Resting (休眠)'
 			if batteryCount == '3':
-				batteryMode = 'Discharging (未充電)'
+				batteryCharge_Mode = 'Discharging (未充電)'
 			if tmp[3] != '':
-				batteryRemain_sec = tmp[3] + ' sec(秒)'
+				batteryRemain_Sec = tmp[3] + ' sec(秒)'
 			else:
-				batteryRemain_sec = 'None By Charging (充電中)'
+				batteryRemain_Sec = 'None By Charging (充電中)'
 			if tmp[4] != '':
-				batteryRemain_min = tmp[4] + ' min(分)'
+				batteryRemain_Min = tmp[4] + ' min(分)'
 			else:
-				batteryRemain_min = 'None By Charging (充電中)'
+				batteryRemain_Min = 'None By Charging (充電中)'
 			batteryVolt = float(tmp[6])/10
 			batteryVolt = Decimal(batteryVolt)*1
 			batteryTemp = int(tmp[8])
-			batteryRemain_percent = int(tmp[9])
+			batteryRemain_Percent = int(tmp[9])
 			print ('電池健康度 : ' + batteryHealth)
 			print ('電池狀態 : ' + batteryStatus)
-			print ('充電模式 : ' + batteryMode)
+			print ('充電模式 : ' + batteryCharge_Mode)
 			print ('電池電壓 : %3.1f V' %batteryVolt)
-			print ('輸出剩餘時間(分) : ' + batteryRemain_min)
-			print ('輸出剩餘時間(秒) : ' + batteryRemain_sec)
-			print ('電量剩餘百分比 : ' + str(batteryRemain_percent) + ' %')
+			print ('輸出剩餘時間(分) : ' + batteryRemain_Min)
+			print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec)
+			print ('電量剩餘百分比 : ' + str(batteryRemain_Percent) + ' %')
 			print ('UPS 內部溫度 : ' + str(batteryTemp) + ' °C')
 			print('-----------------------------------------')
 			time.sleep(1)
@@ -218,14 +218,14 @@ class jsonReturn(Resource):
  		global serialName, systemMode
  		global inputLine, inputFreq, inputVolt
  		global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
- 		global batteryHealth, batteryStatus, batteryMode
- 		global batteryRemain_min, batteryRemain_sec, batteryVolt, batteryTemp, batteryRemain_percent
+ 		global batteryHealth, batteryStatus, batteryCharge_Mode
+ 		global batteryRemain_Min, batteryRemain_Sec, batteryVolt, batteryTemp, batteryRemain_Percent
  		global lastBattery_Year, lastBattery_Mon, lastBattery_Day
  		global nextBattery_Year, nextBattery_Mon, nextBattery_Day
  		return { 'connect' : serialName, \
  		         'input' : [{ 'inputLine' : str(inputLine), 'inputFreq' : str(inputFreq), 'inputVolt' : str(inputVolt) }], \
  		         'output' : [{ 'systemMode' : systemMode, 'outputLine' : str(outputLine), 'outputFreq' : str(outputFreq), 'outputVolt' : str(outputVolt), 'outputAmp' : str(outputAmp), 'outputWatt' : str(outputWatt), 'outputPercent' : str(outputPercent)}], \
- 		         'battery' : [{ 'status' : [{ 'batteryHealth' : batteryHealth, 'batteryStatus' : batteryStatus, 'batteryMode' : batteryMode, 'batteryRemain_min' : batteryRemain_min, 'batteryRemain_sec' : batteryRemain_sec, 'batteryVolt' : str(batteryVolt), 'batteryTemp' : str(batteryTemp), 'batteryRemain_percent' : str(batteryRemain_percent)}]}, \
+ 		         'battery' : [{ 'status' : [{ 'batteryHealth' : batteryHealth, 'batteryStatus' : batteryStatus, 'batteryCharge_Mode' : batteryCharge_Mode, 'batteryRemain_Min' : batteryRemain_Min, 'batteryRemain_Sec' : batteryRemain_Sec, 'batteryVolt' : str(batteryVolt), 'batteryTemp' : str(batteryTemp), 'batteryRemain_Percent' : str(batteryRemain_Percent)}]}, \
  		         { 'lastBattery_Year' : str(lastBattery_Year), 'lastBattery_Mon' : str(lastBattery_Mon), 'lastBattery_Day' : str(lastBattery_Day)}, { 'nextBattery_Year' : str(nextBattery_Year), 'nextBattery_Mon' : str(nextBattery_Mon), 'nextBattery_Day' : str(nextBattery_Day)}]}		
 api.add_resource(jsonReturn, '/')
  
@@ -234,8 +234,8 @@ def dashBoard():
 	global serialName, systemMode
 	global inputLine, inputFreq, inputVolt
 	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
-	global batteryHealth, batteryStatus, batteryMode
-	global batteryRemain_min, batteryRemain_sec, batteryVolt, batteryTemp, batterypercent
+	global batteryHealth, batteryStatus, batteryCharge_Mode
+	global batteryRemain_Min, batteryRemain_Sec, batteryVolt, batteryTemp, batteryRemain_Percent
 	global lastBattery_Year, lastBattery_Mon, lastBattery_Day
 	global nextBattery_Year, nextBattery_Mon, nextBattery_Day
 	connectDevice()
@@ -253,12 +253,12 @@ def dashBoard():
 		 		outputFreq = outputFreq, \
 		 		batteryHealth = batteryHealth, \
 		 		batteryStatus = batteryStatus, \
-		 		batteryMode = batteryMode, \
-		 		batteryRemain_min = batteryRemain_min, \
-		 		batteryRemain_sec = batteryRemain_sec, \
+		 		batteryCharge_Mode = batteryCharge_Mode, \
+		 		batteryRemain_Min = batteryRemain_Min, \
+		 		batteryRemain_Sec = batteryRemain_Sec, \
 		 		batteryVolt = batteryVolt, \
 		 		batteryTemp = batteryTemp, \
-		 		batteryRemain_percent = batteryRemain_percent, \
+		 		batteryRemain_Percent = batteryRemain_Percent, \
 		 		lastBattery_Year = lastBattery_Year, \
 		 		lastBattery_Mon = lastBattery_Mon, \
 		 		lastBattery_Day = lastBattery_Day, \

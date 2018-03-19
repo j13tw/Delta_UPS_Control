@@ -8,13 +8,11 @@ import socket
 hostname = '127.0.0.1'					#chang to your service IP
 port = '5000'							#chang to your service Port
 
-localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
+localOS = os.system('uname 2>&1 >/var/Temp/os.txt')
 if(localOS == 0):
-	response = os.system('ping -c 1 ' + hostname + ' 2>&1 >/var/tmp/ping.txt')
-#	os.system('clear')
+	response = os.system('ping -c 1 ' + hostname + ' 2>&1 >/var/Temp/ping.txt')
 else:
 	response = os.system('ping -n 1 ' + hostname + ' 2>&1 >ping.txt')
-#	os.system('cls')
 
 if response == 0:						# check network sevice & server is on
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,13 +24,9 @@ if response == 0:						# check network sevice & server is on
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
 		outputStatus = key['battery'][0]['status'][0]
-		batteryRemain_Percent = outputStatus['batteryRemain_Percent']
-		if(int(batteryRemain_Percent)) >= 30:
-			print ("Battery Remain Percent : "+ batteryRemain_Percent + " %| Battery Level=" + batteryRemain_Percent + "%;50;30")
-			sys.exit(0)
-		else:
-			print ("Battery Remain Percent : "+ batteryRemain_Percent + " % (Quick Close All Service !)" + "| Battery Level=" + batteryRemain_Percent + "%;50;30")
-			sys.exit(3)
+		batteryTemp = outputStatus['batteryTemp']
+		print ('Battery & UPS inner Temperature : '+ batteryTemp + ' °C')
+		sys.exit(0)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')
 	   	sys.exit(2)   
