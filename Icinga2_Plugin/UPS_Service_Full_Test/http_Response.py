@@ -48,6 +48,7 @@ if response == 0:						# check network sevice & server is on
 		batteryCharge_Mode = status['batteryCharge_Mode']
 		batteryRemain_Min = status['batteryRemain_Min']
 		batteryRemain_Sec = status['batteryRemain_Sec']
+		batteryTemp = status['batteryTemp']
 		lastBattery_Year = lastBattery['lastBattery_Year']
 		lastBattery_Mon = lastBattery['lastBattery_Mon']
 		lastBattery_Day = lastBattery['lastBattery_Day']
