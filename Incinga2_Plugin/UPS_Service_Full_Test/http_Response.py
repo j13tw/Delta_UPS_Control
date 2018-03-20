@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3.6
 import requests
 import json
 import os, sys
 import socket
 
 
-hostname = '127.0.0.1'					#chang to your service IP
+hostname = '10.0.0.164'					#chang to your service IP
 port = '5000'							#chang to your service Port
 
 localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
@@ -28,8 +28,9 @@ if response == 0:						# check network sevice & server is on
 #		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
 #		change the json key to local temp value
 		connect = key['connect']
-		lastBattery = key['battery'][0]
-		nextBattery = key['battery'][1]
+		status = key['battery'][0]['status'][0]
+		lastBattery = key['battery'][1]
+		nextBattery = key['battery'][2]
 		inputStatus = key['input'][0]
 		outputStatus = key['output'][0]
 		inputLine = inputStatus['inputLine']
@@ -42,6 +43,11 @@ if response == 0:						# check network sevice & server is on
 		outputAmp = outputStatus['outputAmp']
 		outputWatt = outputStatus['outputWatt']
 		outputPersent = outputStatus['outputPersent']
+		batteryHealth = status['batteryHealth']
+		batteryStatus = status['batteryStatus']
+		batteryCharge_Mode = status['batteryCharge_Mode']
+		batteryRemain_Min = status['batteryRemain_Min']
+		batteryRemain_Sec = status['batteryRemain_Sec']
 		lastBattery_Year = lastBattery['lastBattery_Year']
 		lastBattery_Mon = lastBattery['lastBattery_Mon']
 		lastBattery_Day = lastBattery['lastBattery_Day']
@@ -63,6 +69,15 @@ if response == 0:						# check network sevice & server is on
 		print ('輸出電流 : ' + outputAmp + 'A')																						#
 		print ('輸出瓦特 : ' + str(int(outputWatt)/1000) + ' KW')																	#
 		print ('輸出負載比 : ' + str(outputPersent) + ' %')																			#
+		print('-----------------------------------------')																			#
+		print ('電池健康度 : ' + batteryHealth)																						#
+		print ('電池狀態 : ' + batteryStatus)																						#
+		print ('充電模式 : ' + batteryCharge_Mode)																					#
+		print ('電池電壓 : %3.1f V' %batteryVolt)																					#
+		print ('輸出剩餘時間(分) : ' + batteryRemain_Min)																			#
+		print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec)																			#
+		print ('電量剩餘百分比 : ' + str(batteryRemain_Percent) + ' %')																#
+		print ('UPS 內部溫度 : ' + str(batteryTemp) + ' °C')																		#
 		print('-----------------------------------------')																			#
 		print ('電池更換時間 : ' + str(lastBattery_Year) + ' 年 ' + str(lastBattery_Mon) + ' 月 ' + str(lastBattery_Day) + ' 日')	#
 		print ('下次更換時間 : ' + str(nextBattery_Year) + ' 年 ' + str(nextBattery_Mon) + ' 月 ' + str(nextBattery_Day) + ' 日')	#
