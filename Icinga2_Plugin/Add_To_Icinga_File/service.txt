@@ -22,9 +22,9 @@ apply Service "check_ups_output_watt"{
     assign where host.address && host.name == "UPS_Monitor"
 }
 
-apply Service "check_ups_load_persent"{
+apply Service "check_ups_load_percent"{
     import "generic-service"
-    check_command = "check_ups_load_persent"
+    check_command = "check_ups_load_percent"
     assign where host.address && host.name == "UPS_Monitor"
 }
 
