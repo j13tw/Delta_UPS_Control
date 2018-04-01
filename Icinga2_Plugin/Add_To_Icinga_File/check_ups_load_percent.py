@@ -26,8 +26,8 @@ if response == 0:						# check network sevice & server is on
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
 		outputStatus = key['output'][0]
-		outputPersent = outputStatus['outputPercent']
-		if(int(outputPersent)) <= 75:
+		outputPercent = outputStatus['outputPercent']
+		if(int(outputPercent)) <= 75:
 			print ("System output Usage Percent : "+ outputPercent + " %| Usage=" + outputPercent + "%;80;90")
 			sys.exit(0)
 		else:
