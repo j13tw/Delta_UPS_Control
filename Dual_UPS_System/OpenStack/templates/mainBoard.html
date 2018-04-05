@@ -8,12 +8,17 @@
 <body>
 </body>
 <script type="text/javascript">
+if ("{{hostHealth}}" != "Alive"){
+	document.bgColor="red"
+}
 const left = document.createElement('div');
 const right = document.createElement('div');
 left.style.display = 'inline-block';
 right.style.display = 'inline-block';
 left.style.minWidth = "50%";
 left.innerHTML = "\
+	UPS Server Link : {{hostname}}:{{port}} ({{hostHealth}})<br>\
+	-------------------------------------------------------------<br>\
 	UPS 連接位置 : {{serName_A}}<br>\
 	-------------------------------------------------------------<br>\
 	輸入線路 : {{inputLine_A}} 號線路<br>\
@@ -42,6 +47,7 @@ left.innerHTML = "\
 	-------------------------------------------------------------\
 ";
 right.innerHTML = "\
+	-------------------------------------------------------------<br>\
 	UPS 連接位置 : {{serName_B}}<br>\
 	-------------------------------------------------------------<br>\
 	輸入線路 : {{inputLine_B}} 號線路<br>\

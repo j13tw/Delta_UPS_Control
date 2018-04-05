@@ -43,7 +43,7 @@ outputLine_B = 0
 outputFreq_B = 0
 outputVolt_B = 0
 outputWatt_B = 0
-outputBmp_B = 0
+outputAmp_B = 0
 outputPercent_B = 0
 batteryHealth_B = ''
 batteryStatus_B = ''
@@ -72,7 +72,8 @@ def connectDevice():
 			global batteryRemain_Min_A, batteryRemain_Sec_A, batteryVolt_A, batteryTemp_A, batteryRemain_Percent_A
 			global lastBattery_Year_A, lastBattery_Mon_A, lastBattery_Day_A
 			global nextBattery_Year_A, nextBattery_Mon_A, nextBattery_Day_A
-			serialName_A = ser.name
+			serialName_A = ser.name + " (左)"
+			print('-----------------------------------------')
 			print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
 			print('-----------------------------------------')
 		#	--> STI 輸入資料
@@ -234,6 +235,7 @@ def connectDevice():
 			nextBattery_Day_A = nextDate - nextBattery_Mon_A*100 - nextBattery_Year_A*10000
 			print ('電池更換時間 : ' + str(lastBattery_Year_A) + ' 年 ' + str(lastBattery_Mon_A) + ' 月 ' + str(lastBattery_Day_A) + ' 日')
 			print ('下次更換時間 : ' + str(nextBattery_Year_A) + ' 年 ' + str(nextBattery_Mon_A) + ' 月 ' + str(nextBattery_Day_A) + ' 日')
+			print('-----------------------------------------')
 			ser.close()             # close port
 			time.sleep(1)
 		else:
@@ -243,12 +245,12 @@ def connectDevice():
 			global serialName_B
 			global systemMode_B
 			global inputLine_B, inputFreq_B, inputVolt_B
-			global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputBmp_B, outputPercent_B
+			global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputAmp_B, outputPercent_B
 			global batteryHealth_B, batteryStatus_B, batteryCharge_Mode_B
 			global batteryRemain_Min_B, batteryRemain_Sec_B, batteryVolt_B, batteryTemp_B, batteryRemain_Percent_B
 			global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
 			global nextBattery_Year_B, nextBattery_Mon_B, nextBattery_Day_B
-			serialName_B = ser.name
+			serialName_B = ser.name+ " (右)"
 			print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 			print('-----------------------------------------')
 		#	--> STI 輸入資料
@@ -313,14 +315,14 @@ def connectDevice():
 			outputLine_B = int(tmp[2])
 			outputVolt_B = float(tmp[3])/10
 			outputWatt_B = int(tmp[5])
-			outputBmp_B = float(outputWatt_B/outputVolt_B)
-			outputBmp_B = Decimal(outputBmp_B)*1
+			outputAmp_B = float(outputWatt_B/outputVolt_B)
+			outputAmp_B = Decimal(outputAmp_B)*1
 			outputPercent_B = int(tmp[6])
 			print ('輸出狀態 : '+ systemMode_B)
 			print ('輸出線路 : ' + str(outputLine_B) + ' 號線路')
 			print ('輸出頻率 : ' + str(outputFreq_B) + ' Hz')
 			print ('輸出電壓 : %3.1f V' %outputVolt_B)
-			print ('輸出電流 : %3.3f B' %outputBmp_B)
+			print ('輸出電流 : %3.3f A' %outputAmp_B)
 			print ('輸出瓦特 : ' + str(outputWatt_B/1000) + ' KW')
 			print ('輸出負載比 : ' + str(outputPercent_B) + ' %')
 			print('-----------------------------------------')
@@ -425,7 +427,7 @@ class jsonReturn(Resource):
  		global nextBattery_Year_A, nextBattery_Mon_A, nextBattery_Day_A
  		global serialName_B, systemMode_B
  		global inputLine_B, inputFreq_B, inputVolt_B
- 		global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputBmp_B, outputPercent_B
+ 		global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputAmp_B, outputPercent_B
  		global batteryHealth_B, batteryStatus_B, batteryCharge_Mode_B
  		global batteryRemain_Min_B, batteryRemain_Sec_B, batteryVolt_B, batteryTemp_B, batteryRemain_Percent_B
  		global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
@@ -433,8 +435,8 @@ class jsonReturn(Resource):
  		return { 'connect_A' : serialName_A, 'connect_B' : serialName_B, \
  		         'input_A' : [{ 'inputLine_A' : str(inputLine_A), 'inputFreq_A' : str(inputFreq_A), 'inputVolt_A' : str(inputVolt_A) }], \
  		         'input_B' : [{ 'inputLine_B' : str(inputLine_B), 'inputFreq_B' : str(inputFreq_B), 'inputVolt_B' : str(inputVolt_B) }], \
- 		         'outputA' : [{ 'systemMode_A' : systemMode_A, 'outputLine_A' : str(outputLine_A), 'outputFreq_A' : str(outputFreq_A), 'outputVolt_A' : str(outputVolt_A), 'outputAmp_A' : str(outputAmp_A), 'outputWatt_A' : str(outputWatt_A), 'outputPercent_A' : str(outputPercent_A)}], \
- 		         'outputB' : [{ 'systemMode_B' : systemMode_B, 'outputLine_B' : str(outputLine_B), 'outputFreq_B' : str(outputFreq_B), 'outputVolt_B' : str(outputVolt_B), 'outputBmp_B' : str(outputBmp_B), 'outputWatt_B' : str(outputWatt_B), 'outputPercent_B' : str(outputPercent_B)}], \
+ 		         'output_A' : [{ 'systemMode_A' : systemMode_A, 'outputLine_A' : str(outputLine_A), 'outputFreq_A' : str(outputFreq_A), 'outputVolt_A' : str(outputVolt_A), 'outputAmp_A' : str(outputAmp_A), 'outputWatt_A' : str(outputWatt_A/1000), 'outputPercent_A' : str(outputPercent_A)}], \
+ 		         'output_B' : [{ 'systemMode_B' : systemMode_B, 'outputLine_B' : str(outputLine_B), 'outputFreq_B' : str(outputFreq_B), 'outputVolt_B' : str(outputVolt_B), 'outputAmp_B' : str(outputAmp_B), 'outputWatt_B' : str(outputWatt_B/1000), 'outputPercent_B' : str(outputPercent_B)}], \
  		         'battery_A' : [{ 'status' : [{ 'batteryHealth_A' : batteryHealth_A, 'batteryStatus_A' : batteryStatus_A, 'batteryCharge_Mode_A' : batteryCharge_Mode_A, 'batteryRemain_Min_A' : batteryRemain_Min_A, 'batteryRemain_Sec_A' : batteryRemain_Sec_A, 'batteryVolt_A' : str(batteryVolt_A), 'batteryTemp_A' : str(batteryTemp_A), 'batteryRemain_Percent_A' : str(batteryRemain_Percent_A)}]}, \
  		         { 'lastBattery_Year_A' : str(lastBattery_Year_A), 'lastBattery_Mon_A' : str(lastBattery_Mon_A), 'lastBattery_Day_A' : str(lastBattery_Day_A)}, { 'nextBattery_Year_A' : str(nextBattery_Year_A), 'nextBattery_Mon_A' : str(nextBattery_Mon_A), 'nextBattery_Day_A' : str(nextBattery_Day_A)}], \
  		         'battery_B' : [{ 'status' : [{ 'batteryHealth_B' : batteryHealth_B, 'batteryStatus_B' : batteryStatus_B, 'batteryCharge_Mode_B' : batteryCharge_Mode_B, 'batteryRemain_Min_B' : batteryRemain_Min_B, 'batteryRemain_Sec_B' : batteryRemain_Sec_B, 'batteryVolt_B' : str(batteryVolt_B), 'batteryTemp_B' : str(batteryTemp_B), 'batteryRemain_Percent_B' : str(batteryRemain_Percent_B)}]}, \
@@ -452,7 +454,7 @@ def dashBoard():
 	global nextBattery_Year_A, nextBattery_Mon_A, nextBattery_Day_A
 	global serialName_B, systemMode_B
 	global inputLine_B, inputFreq_B, inputVolt_B
-	global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputBmp_B, outputPercent_B
+	global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputAmp_B, outputPercent_B
 	global batteryHealth_B, batteryStatus_B, batteryCharge_Mode_B
 	global batteryRemain_Min_B, batteryRemain_Sec_B, batteryVolt_B, batteryTemp_B, batteryRemain_Percent_B
 	global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
@@ -491,7 +493,7 @@ def dashBoard():
 				systemMode_B = str(systemMode_B), \
 				outputLine_B = outputLine_B, \
 				outputVolt_B = outputVolt_B, \
-				outputBmp_B = Decimal(outputBmp_B)*1, \
+				outputAmp_B = Decimal(outputAmp_B)*1, \
 				outputPercent_B = outputPercent_B, \
 				outputWatt_B = outputWatt_B/1000, \
 				outputFreq_B = outputFreq_B, \
