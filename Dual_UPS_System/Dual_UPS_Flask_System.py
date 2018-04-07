@@ -256,14 +256,14 @@ def connectDevice():
 		time.sleep(1)
 
 	portAcess_B = False
-    try:
+	try:
         ser = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)                    # select which your p$
         portAcess_B = True
         UPS_Life_B = 'onLine(在線)'
-    except:
+	except:
         portAcess_B = False
         UPS_Life_B = 'offLine(離線)'
-    if(portAcess_B):
+	if(portAcess_B):
 		serialName_B = ser.name+ " (右)"
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 		print('-----------------------------------------')
