@@ -93,8 +93,8 @@ def connectDevice():
 		print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
-	#	ser.write(b'~00P000STI')                       		# write a UPS RS232 format string
-		ser.write(b'~00D0101;600;2190')   			# Return data format 1 Test
+		ser.write(b'~00P000STI')                       		# write a UPS RS232 format string
+	#	ser.write(b'~00D0101;600;2190')   			# Return data format 1 Test
 	#	ser.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
 		s = ser.read(30)        							# read up to return data 30 bytes (timeout)
 	#	print(s)
@@ -118,8 +118,8 @@ def connectDevice():
 		print('-----------------------------------------')
 		time.sleep(1)
 	#	--> STO
-	#	ser.write(b'~00P000STO')
-		ser.write(b'~00D0230;600;1;2210;;03169;037')
+		ser.write(b'~00P000STO')
+	#	ser.write(b'~00D0230;600;1;2210;;03169;037')
 		s = ser.read(30)
 		countMode = ''
 		s = s.decode('ascii')
@@ -168,8 +168,8 @@ def connectDevice():
 		print('-----------------------------------------')
 		time.sleep(1)
 	#	--> STB 輸入資料
-	#	ser.write(b'~00P000STB')
-		ser.write(b'~00D0250;0;1;;;000;2720;;031;100')
+		ser.write(b'~00P000STB')
+	#	ser.write(b'~00D0250;0;1;;;000;2720;;031;100')
 		s = ser.read(40)
 		batteryCount = ''
 		s = s.decode('ascii')
@@ -227,8 +227,8 @@ def connectDevice():
 		print('-----------------------------------------')
 		time.sleep(1)
 	# 	--> BRD
-	#	ser.write(b'~00P000BRD')
-		ser.write(b'~00D01720170322;20200322')
+		ser.write(b'~00P000BRD')
+	#	ser.write(b'~00D01720170322;20200322')
 		s = ser.read(30)
 		countLastDate = ''
 		s = s.decode('ascii')
@@ -268,8 +268,8 @@ def connectDevice():
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
-	#	ser.write(b'~00P000STI')                       		# write a UPS RS232 format string
-		ser.write(bytes(b'~00D0101;600;2190'))   			# Return data format 1 Test
+		ser.write(b'~00P000STI')                       		# write a UPS RS232 format string
+	#	ser.write(bytes(b'~00D0101;600;2190'))   			# Return data format 1 Test
 	#	ser.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
 		s = ser.read(30)        							# read up to return data 30 bytes (timeout)
 		countLine = ''
@@ -292,8 +292,8 @@ def connectDevice():
 		print('-----------------------------------------')
 		time.sleep(1)
 	#	--> STO
-	#	ser.write(b'~00P000STO')
-		ser.write(b'~00D0230;600;1;2210;;03169;037')
+		ser.write(b'~00P000STO')
+	#	ser.write(b'~00D0230;600;1;2210;;03169;037')
 		s = ser.read(30)
 		countMode = ''
 		s = s.decode('ascii')
@@ -342,8 +342,8 @@ def connectDevice():
 		print('-----------------------------------------')
 		time.sleep(1)
 	#	--> STB 輸入資料
-	#	ser.write(b'~00P000STB')
-		ser.write(b'~00D0250;0;1;;;000;2720;;031;100')
+		ser.write(b'~00P000STB')
+	#	ser.write(b'~00D0250;0;1;;;000;2720;;031;100')
 		s = ser.read(40)
 		batteryCount = ''
 		s = s.decode('ascii')
@@ -401,8 +401,8 @@ def connectDevice():
 		print('-----------------------------------------')
 		time.sleep(1)
 	# 	--> BRD
-	#	ser.write(b'~00P000BRD')
-		ser.write(b'~00D01720170322;20200322')
+		ser.write(b'~00P000BRD')
+	#	ser.write(b'~00D01720170322;20200322')
 		s = ser.read(30)
 		countLastDate = ''
 		s = s.decode('ascii')
