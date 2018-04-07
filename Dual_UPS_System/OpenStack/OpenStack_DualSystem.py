@@ -9,6 +9,7 @@ from decimal import getcontext, Decimal
 
 app = Flask(__name__)
 
+ups_Life_A = ''
 serialName_A = ''
 systemMode_A = 0
 inputLine_A = 0
@@ -34,6 +35,7 @@ lastBattery_Day_A = 0
 nextBattery_Year_A = 0
 nextBattery_Mon_A = 0
 nextBattery_Day_A = 0
+ups_Life_B = ''
 serialName_B = ''
 systemMode_B = 0
 inputLine_B = 0
@@ -65,14 +67,14 @@ hostHealth = ''
 
 def connectDevice():
 	global hostname, port, hostHealth
-	global serialName_A, systemMode_A
+	global serialName_A, systemMode_A, ups_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
 	global outputLine_A, outputFreq_A, outputVolt_A, outputWatt_A, outputAmp_A, outputPercent_A
 	global batteryHealth_A, batteryStatus_A, batteryCharge_Mode_A
 	global batteryRemain_Min_A, batteryRemain_Sec_A, batteryVolt_A, batteryTemp_A, batteryRemain_Percent_A
 	global lastBattery_Year_A, lastBattery_Mon_A, lastBattery_Day_A
 	global nextBattery_Year_A, nextBattery_Mon_A, nextBattery_Day_A
-	global serialName_B, systemMode_B
+	global serialName_B, systemMode_B, ups_Life_B
 	global inputLine_B, inputFreq_B, inputVolt_B
 	global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputAmp_B, outputPercent_B
 	global batteryHealth_B, batteryStatus_B, batteryCharge_Mode_B
@@ -101,6 +103,7 @@ def connectDevice():
 			key = json.loads(value)
 	#		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
 	#		change the json key to local temp value
+			ups_Life_A = key['ups_Life_A']
 			serialName_A = key['connect_A']
 			status_A = key['battery_A'][0]['status'][0]
 			batteryHealth_A = status_A['batteryHealth_A']
@@ -131,6 +134,7 @@ def connectDevice():
 			nextBattery_Year_A = nextBattery_A['nextBattery_Year_A']
 			nextBattery_Mon_A = nextBattery_A['nextBattery_Mon_A']
 			nextBattery_Day_A = nextBattery_A['nextBattery_Day_A']
+			ups_Life_B = key['ups_Life_B']
 			serialName_B = key['connect_B']
 			status_B = key['battery_B'][0]['status'][0]
 			batteryHealth_B = status_B['batteryHealth_B']
@@ -172,14 +176,14 @@ def connectDevice():
 @app.route('/')
 def dashBoard():
 	global hostname, port, hostHealth
-	global serialName_A, systemMode_A
+	global serialName_A, systemMode_A, ups_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
 	global outputLine_A, outputFreq_A, outputVolt_A, outputWatt_A, outputAmp_A, outputPercent_A
 	global batteryHealth_A, batteryStatus_A, batteryCharge_Mode_A
 	global batteryRemain_Min_A, batteryRemain_Sec_A, batteryVolt_A, batteryTemp_A, batteryRemain_Percent_A
 	global lastBattery_Year_A, lastBattery_Mon_A, lastBattery_Day_A
 	global nextBattery_Year_A, nextBattery_Mon_A, nextBattery_Day_A
-	global serialName_B, systemMode_B
+	global serialName_B, systemMode_B, ups_Life_B
 	global inputLine_B, inputFreq_B, inputVolt_B
 	global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputAmp_B, outputPercent_B
 	global batteryHealth_B, batteryStatus_B, batteryCharge_Mode_B
@@ -191,6 +195,7 @@ def dashBoard():
 		 		hostname = hostname, \
 		 		port = port, \
 		 		hostHealth = hostHealth, \
+		 		ups_Life_A = ups_Life_A, \
 		 		serName_A = serialName_A, \
 		 		inputVolt_A = inputVolt_A, \
 		 		inputFreq_A = inputFreq_A, \
@@ -217,6 +222,7 @@ def dashBoard():
 		 		nextBattery_Mon_A = nextBattery_Mon_A, \
 		 		nextBattery_Day_A = nextBattery_Day_A, \
 		 		serName_B = serialName_B, \
+		 		ups_Life_B = ups_Life_B, \
 				inputVolt_B = inputVolt_B, \
 				inputFreq_B = inputFreq_B, \
 				inputLine_B = inputLine_B, \
@@ -245,4 +251,4 @@ def dashBoard():
 
 if __name__ == '__main__':
 #	app.run(debug = True)
-	app.run(host = '0.0.0.0', port=3001, debug=True)
+	app.run(host = '0.0.0.0', port=5000)
