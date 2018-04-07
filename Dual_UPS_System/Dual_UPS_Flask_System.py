@@ -257,7 +257,7 @@ def connectDevice():
 
 	portAcess_B = False
 	try:
-        ser = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)                    # select which your p$
+        ser = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)                    # select which your port
         portAcess_B = True
         UPS_Life_B = 'onLine(在線)'
 	except:
