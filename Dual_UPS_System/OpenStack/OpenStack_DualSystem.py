@@ -82,7 +82,7 @@ def connectDevice():
 	global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
 	global nextBattery_Year_B, nextBattery_Mon_B, nextBattery_Day_B
 	
-	hostname = '127.0.0.1'					#chang to your service IP
+	hostname = '10.0.0.164'					#chang to your service IP
 	port = '3000'							#chang to your service Port
 	localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
 	if(localOS == 0):
@@ -98,74 +98,77 @@ def connectDevice():
 		if result == 0:
 			sock.close()
 			distance = 'http://' + hostname + ':' + port
-			r = requests.get(distance)
-			value = r.content.decode('utf-8')	# get return json value
-			key = json.loads(value)
-	#		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
-	#		change the json key to local temp value
-			ups_Life_A = key['ups_Life_A']
-			serialName_A = key['connect_A']
-			status_A = key['battery_A'][0]['status'][0]
-			batteryHealth_A = status_A['batteryHealth_A']
-			batteryStatus_A = status_A['batteryStatus_A']
-			batteryCharge_Mode_A = status_A['batteryCharge_Mode_A']
-			batteryRemain_Min_A = status_A['batteryRemain_Min_A']
-			batteryRemain_Sec_A = status_A['batteryRemain_Sec_A']
-			batteryVolt_A = status_A['batteryVolt_A']
-			batteryTemp_A = status_A['batteryTemp_A']
-			batteryRemain_Percent_A = status_A['batteryRemain_Percent_A']
-			lastBattery_A = key['battery_A'][1]
-			nextBattery_A = key['battery_A'][2]
-			inputStatus_A = key['input_A'][0]
-			outputStatus_A = key['output_A'][0]
-			inputLine_A = inputStatus_A['inputLine_A']
-			inputFreq_A = inputStatus_A['inputFreq_A']
-			inputVolt_A = inputStatus_A['inputVolt_A']
-			systemMode_A = outputStatus_A['systemMode_A']
-			outputLine_A = outputStatus_A['outputLine_A']
-			outputFreq_A = outputStatus_A['outputFreq_A']
-			outputVolt_A = outputStatus_A['outputVolt_A']
-			outputAmp_A = outputStatus_A['outputAmp_A']
-			outputWatt_A = outputStatus_A['outputWatt_A']
-			outputPercent_A = outputStatus_A['outputPercent_A']
-			lastBattery_Year_A = lastBattery_A['lastBattery_Year_A']
-			lastBattery_Mon_A = lastBattery_A['lastBattery_Mon_A']
-			lastBattery_Day_A = lastBattery_A['lastBattery_Day_A']
-			nextBattery_Year_A = nextBattery_A['nextBattery_Year_A']
-			nextBattery_Mon_A = nextBattery_A['nextBattery_Mon_A']
-			nextBattery_Day_A = nextBattery_A['nextBattery_Day_A']
-			ups_Life_B = key['ups_Life_B']
-			serialName_B = key['connect_B']
-			status_B = key['battery_B'][0]['status'][0]
-			batteryHealth_B = status_B['batteryHealth_B']
-			batteryStatus_B = status_B['batteryStatus_B']
-			batteryCharge_Mode_B = status_B['batteryCharge_Mode_B']
-			batteryRemain_Min_B = status_B['batteryRemain_Min_B']
-			batteryRemain_Sec_B = status_B['batteryRemain_Sec_B']
-			batteryVolt_B = status_B['batteryVolt_B']
-			batteryTemp_B = status_B['batteryTemp_B']
-			batteryRemain_Percent_B = status_B['batteryRemain_Percent_B']
-			lastBattery_B = key['battery_B'][1]
-			nextBattery_B = key['battery_B'][2]
-			inputStatus_B = key['input_B'][0]
-			outputStatus_B = key['output_B'][0]
-			inputLine_B = inputStatus_B['inputLine_B']
-			inputFreq_B = inputStatus_B['inputFreq_B']
-			inputVolt_B = inputStatus_B['inputVolt_B']
-			systemMode_B = outputStatus_B['systemMode_B']
-			outputLine_B = outputStatus_B['outputLine_B']
-			outputFreq_B = outputStatus_B['outputFreq_B']
-			outputVolt_B = outputStatus_B['outputVolt_B']
-			outputAmp_B = outputStatus_B['outputAmp_B']
-			outputWatt_B = outputStatus_B['outputWatt_B']
-			outputPercent_B = outputStatus_B['outputPercent_B']
-			lastBattery_Year_B = lastBattery_B['lastBattery_Year_B']
-			lastBattery_Mon_B = lastBattery_B['lastBattery_Mon_B']
-			lastBattery_Day_B = lastBattery_B['lastBattery_Day_B']
-			nextBattery_Year_B = nextBattery_B['nextBattery_Year_B']
-			nextBattery_Mon_B = nextBattery_B['nextBattery_Mon_B']
-			nextBattery_Day_B = nextBattery_B['nextBattery_Day_B']
-			hostHealth = 'Alive'
+			try:
+				r = requests.get(distance)
+				value = r.content.decode('utf-8')	# get return json value
+				key = json.loads(value)
+		#		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
+		#		change the json key to local temp value
+				ups_Life_A = key['ups_Life_A']
+				serialName_A = key['connect_A']
+				status_A = key['battery_A'][0]['status'][0]
+				batteryHealth_A = status_A['batteryHealth_A']
+				batteryStatus_A = status_A['batteryStatus_A']
+				batteryCharge_Mode_A = status_A['batteryCharge_Mode_A']
+				batteryRemain_Min_A = status_A['batteryRemain_Min_A']
+				batteryRemain_Sec_A = status_A['batteryRemain_Sec_A']
+				batteryVolt_A = status_A['batteryVolt_A']
+				batteryTemp_A = status_A['batteryTemp_A']
+				batteryRemain_Percent_A = status_A['batteryRemain_Percent_A']
+				lastBattery_A = key['battery_A'][1]
+				nextBattery_A = key['battery_A'][2]
+				inputStatus_A = key['input_A'][0]
+				outputStatus_A = key['output_A'][0]
+				inputLine_A = inputStatus_A['inputLine_A']
+				inputFreq_A = inputStatus_A['inputFreq_A']
+				inputVolt_A = inputStatus_A['inputVolt_A']
+				systemMode_A = outputStatus_A['systemMode_A']
+				outputLine_A = outputStatus_A['outputLine_A']
+				outputFreq_A = outputStatus_A['outputFreq_A']
+				outputVolt_A = outputStatus_A['outputVolt_A']
+				outputAmp_A = outputStatus_A['outputAmp_A']
+				outputWatt_A = outputStatus_A['outputWatt_A']
+				outputPercent_A = outputStatus_A['outputPercent_A']
+				lastBattery_Year_A = lastBattery_A['lastBattery_Year_A']
+				lastBattery_Mon_A = lastBattery_A['lastBattery_Mon_A']
+				lastBattery_Day_A = lastBattery_A['lastBattery_Day_A']
+				nextBattery_Year_A = nextBattery_A['nextBattery_Year_A']
+				nextBattery_Mon_A = nextBattery_A['nextBattery_Mon_A']
+				nextBattery_Day_A = nextBattery_A['nextBattery_Day_A']
+				ups_Life_B = key['ups_Life_B']
+				serialName_B = key['connect_B']
+				status_B = key['battery_B'][0]['status'][0]
+				batteryHealth_B = status_B['batteryHealth_B']
+				batteryStatus_B = status_B['batteryStatus_B']
+				batteryCharge_Mode_B = status_B['batteryCharge_Mode_B']
+				batteryRemain_Min_B = status_B['batteryRemain_Min_B']
+				batteryRemain_Sec_B = status_B['batteryRemain_Sec_B']
+				batteryVolt_B = status_B['batteryVolt_B']
+				batteryTemp_B = status_B['batteryTemp_B']
+				batteryRemain_Percent_B = status_B['batteryRemain_Percent_B']
+				lastBattery_B = key['battery_B'][1]
+				nextBattery_B = key['battery_B'][2]
+				inputStatus_B = key['input_B'][0]
+				outputStatus_B = key['output_B'][0]
+				inputLine_B = inputStatus_B['inputLine_B']
+				inputFreq_B = inputStatus_B['inputFreq_B']
+				inputVolt_B = inputStatus_B['inputVolt_B']
+				systemMode_B = outputStatus_B['systemMode_B']
+				outputLine_B = outputStatus_B['outputLine_B']
+				outputFreq_B = outputStatus_B['outputFreq_B']
+				outputVolt_B = outputStatus_B['outputVolt_B']
+				outputAmp_B = outputStatus_B['outputAmp_B']
+				outputWatt_B = outputStatus_B['outputWatt_B']
+				outputPercent_B = outputStatus_B['outputPercent_B']
+				lastBattery_Year_B = lastBattery_B['lastBattery_Year_B']
+				lastBattery_Mon_B = lastBattery_B['lastBattery_Mon_B']
+				lastBattery_Day_B = lastBattery_B['lastBattery_Day_B']
+				nextBattery_Year_B = nextBattery_B['nextBattery_Year_B']
+				nextBattery_Mon_B = nextBattery_B['nextBattery_Mon_B']
+				nextBattery_Day_B = nextBattery_B['nextBattery_Day_B']
+				hostHealth = 'Alive'
+			except:
+				print("get_error !")
 		else:
 		   	print ('http://' + hostname +':' + port + ' Service Port Found !')
 		   	hostHealth = 'Port Error or IP Not Found'
