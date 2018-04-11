@@ -1,0 +1,23 @@
+object Host "UPS_Monitor_A"{
+
+	import "generic-host"
+
+	display_name="UPS_Monitor_A"
+
+	address = "127.0.0.1"
+
+	check_command="hostalive"
+
+}
+
+object Host "UPS_Monitor_B"{
+
+	import "generic-host"
+
+	display_name="UPS_Monitor_B"
+
+	address = "127.0.0.1"
+
+	check_command="hostalive"
+
+}

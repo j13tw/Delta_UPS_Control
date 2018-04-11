@@ -1,0 +1,171 @@
+object CheckCommand "check_ups_status_A" {
+
+    import "plugin-check-command"	
+    command = [ "/usr/lib64/nagios/plugins/check_ups_status_A.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_output_volt_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_volt_A.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_output_amp_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_amp_A.py" ]
+
+}
+
+object CheckCommand "check_ups_output_watt_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_watt_A.py" ]
+
+}
+
+object CheckCommand "check_ups_load_percent_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_load_percent_A.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_volt_A" {
+	
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_volt_A.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_battery_health_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_health_A.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_charge_mode_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_charge_mode_A.py" ]
+
+}
+
+object CheckCommand "check_ups_battery_temperature_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_temperature_A.py" ]
+
+}
+
+object CheckCommand "check_ups_battery_remain_percent_A" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_remain_percent_A.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_status_A" {
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_status_A.py" ]
+
+}
+
+
+object CheckCommand "check_ups_status_B" {
+
+    import "plugin-check-command"   
+    command = [ "/usr/lib64/nagios/plugins/check_ups_status_B.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_output_volt_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_volt_B.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_output_amp_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_amp_B.py" ]
+
+}
+
+object CheckCommand "check_ups_output_watt_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_watt_B.py" ]
+
+}
+
+object CheckCommand "check_ups_load_percent_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_load_percent_B.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_volt_B" {
+    
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_volt_B.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_battery_health_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_health_B.py" ]
+
+}
+
+
+
+object CheckCommand "check_ups_battery_charge_mode_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_charge_mode_B.py" ]
+
+}
+
+object CheckCommand "check_ups_battery_temperature_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_temperature_B.py" ]
+
+}
+
+object CheckCommand "check_ups_battery_remain_percent_B" {
+
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_remain_percent_B.py" ]
+
+}
+
+
+object CheckCommand "check_ups_battery_status_B" {
+    import "plugin-check-command"
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_status_B.py" ]
+
+}

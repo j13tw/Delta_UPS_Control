@@ -1,0 +1,17 @@
+1. Run Your UPS Monitor Service (Flask_RestfulApi_UPS_Serial.py)
+2. Find Your UPS Monitor Host IP & Port
+3. Change "http_Response.py" python File Service IP & Port
+4. Open the terminal Enter command "python check_ups_status.py"
+5. Get the UPS SystemMode Status Return
+6. Check the code can run in your Icinga2 host computer
+7. Copy all file by name "check_ups_XXXXXXXX.py" to your Icinga Plugin script Folder (/etc/icinga2/scripts/)
+8. Terminal command "sudo chomd 777 check_ups_XXXXXXXX.py" with all your file in Folder /etc/icinga2/scripts/
+9. Copy the command.txt content add to Icinga Plugin command config File (/etc/icinga2/conf.d/commands.conf)
+10. Copy the service.txt content add to Icinga Plugin service config File (/etc/icinga2/conf.d/services.conf)
+11.Copy the host.txt content add to Icinga Plugin host config File (/etc/icinga2/conf.d/hosts.conf)
+12.Creat the "ping.txt" & "os.txt" in Folder "/var/tmp"
+13.Terminal command "sudo chmod 777 ping.txt os.txt" 
+14.Terminal command "systemctl restart icinga2"
+15.Terminal command "systemctl status icinga2 -l" to debug the Error !
+
+#if you have any qusetion please mail to j13tw@yahoo.com.tw 
