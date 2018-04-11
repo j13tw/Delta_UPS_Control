@@ -1,7 +1,7 @@
 object CheckCommand "check_ups_status" {
 
     import "plugin-check-command"	
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_status.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_status.py" ]
 
 }
 
@@ -10,7 +10,7 @@ object CheckCommand "check_ups_status" {
 object CheckCommand "check_ups_output_volt" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_output_volt.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_volt.py" ]
 
 }
 
@@ -19,21 +19,21 @@ object CheckCommand "check_ups_output_volt" {
 object CheckCommand "check_ups_output_amp" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_output_amp.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_amp.py" ]
 
 }
 
 object CheckCommand "check_ups_output_watt" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_output_watt.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_output_watt.py" ]
 
 }
 
 object CheckCommand "check_ups_load_percent" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_load_percent.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_load_percent.py" ]
 
 }
 
@@ -41,7 +41,7 @@ object CheckCommand "check_ups_load_percent" {
 object CheckCommand "check_ups_battery_volt" {
 	
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_volt.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_volt.py" ]
 
 }
 
@@ -50,7 +50,7 @@ object CheckCommand "check_ups_battery_volt" {
 object CheckCommand "check_ups_battery_health" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_health.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_health.py" ]
 
 }
 
@@ -59,27 +59,27 @@ object CheckCommand "check_ups_battery_health" {
 object CheckCommand "check_ups_battery_charge_mode" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_charge_mode.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_charge_mode.py" ]
 
 }
 
 object CheckCommand "check_ups_battery_temperature" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_temperature.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_temperature.py" ]
 
 }
 
 object CheckCommand "check_ups_battery_remain_percent" {
 
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_remain_percent.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_remain_percent.py" ]
 
 }
 
 
 object CheckCommand "check_ups_battery_status" {
     import "plugin-check-command"
-    command = [ SysconfDir + "/icinga2/scripts/check_ups_battery_status.py" ]
+    command = [ "/usr/lib64/nagios/plugins/check_ups_battery_status.py" ]
 
 }
