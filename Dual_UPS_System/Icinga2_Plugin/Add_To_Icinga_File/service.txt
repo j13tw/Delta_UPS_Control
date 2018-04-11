@@ -35,19 +35,19 @@ apply Service "check_ups_battery_volt_A"{
 }
 
 apply Service "check_ups_battery_charge_mode_A"{
-    import "generic-service_A"
+    import "generic-service"
     check_command = "check_ups_battery_charge_mode_A"
     assign where host.address && host.name == "UPS_Monitor_A"
 }
 
 apply Service "check_ups_battery_temperature_A"{
-    import "generic-service_A"
+    import "generic-service"
     check_command = "check_ups_battery_temperature_A"
     assign where host.address && host.name == "UPS_Monitor_A"
 }
 
 apply Service "check_ups_battery_remain_percent_A"{
-    import "generic-service_A"
+    import "generic-service"
     check_command = "check_ups_battery_remain_percent_A"
     assign where host.address && host.name == "UPS_Monitor_A"
 }
@@ -101,19 +101,19 @@ apply Service "check_ups_battery_volt_B"{
 }
 
 apply Service "check_ups_battery_charge_mode_B"{
-    import "generic-service_B"
+    import "generic-service"
     check_command = "check_ups_battery_charge_mode_B"
     assign where host.address && host.name == "UPS_Monitor_B"
 }
 
 apply Service "check_ups_battery_temperature_B"{
-    import "generic-service_B"
+    import "generic-service"
     check_command = "check_ups_battery_temperature_B"
     assign where host.address && host.name == "UPS_Monitor_B"
 }
 
 apply Service "check_ups_battery_remain_percent_B"{
-    import "generic-service_B"
+    import "generic-service"
     check_command = "check_ups_battery_remain_percent_B"
     assign where host.address && host.name == "UPS_Monitor_B"
 }
