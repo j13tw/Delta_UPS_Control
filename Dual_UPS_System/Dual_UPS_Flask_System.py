@@ -1,10 +1,13 @@
 #!/usr/bin/python3.6
 import serial, time
+import requests
 from flask import Flask
 from flask_restful import Resource, Api
 from flask import render_template
 from decimal import getcontext, Decimal
 from serial import SerialException
+
+requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)
 api = Api(app)
@@ -261,6 +264,7 @@ def connectDevice():
 		portAcess_B = True
 		UPS_Life_B = 'onLine(在線)'
 	except:
+		print ("USB Port B Open Error !")
 		portAcess_B = False
 		UPS_Life_B = 'offLine(離線)'
 	if(portAcess_B):
@@ -427,9 +431,21 @@ def connectDevice():
 		print ('下次更換時間 : ' + str(nextBattery_Year_B) + ' 年 ' + str(nextBattery_Mon_B) + ' 月 ' + str(nextBattery_Day_B) + ' 日')
 		ser.close()             # close port
 		time.sleep(1)
+	try:
+		r = requests.post("http://10.20.0.76/", json={ 'connect_A' : serialName_A, 'connect_B' : serialName_B, 'ups_Life_A' : UPS_Life_A, 'ups_Life_B' : UPS_Life_B, \
+		         'input_A' : [{ 'inputLine_A' : str(inputLine_A), 'inputFreq_A' : str(inputFreq_A), 'inputVolt_A' : str(inputVolt_A) }], \
+		         'input_B' : [{ 'inputLine_B' : str(inputLine_B), 'inputFreq_B' : str(inputFreq_B), 'inputVolt_B' : str(inputVolt_B) }], \
+		         'output_A' : [{ 'systemMode_A' : systemMode_A, 'outputLine_A' : str(outputLine_A), 'outputFreq_A' : str(outputFreq_A), 'outputVolt_A' : str(outputVolt_A), 'outputAmp_A' : str(outputAmp_A), 'outputWatt_A' : str(outputWatt_A/1000), 'outputPercent_A' : str(outputPercent_A)}], \
+		         'output_B' : [{ 'systemMode_B' : systemMode_B, 'outputLine_B' : str(outputLine_B), 'outputFreq_B' : str(outputFreq_B), 'outputVolt_B' : str(outputVolt_B), 'outputAmp_B' : str(outputAmp_B), 'outputWatt_B' : str(outputWatt_B/1000), 'outputPercent_B' : str(outputPercent_B)}], \
+		         'battery_A' : [{ 'status' : [{ 'batteryHealth_A' : batteryHealth_A, 'batteryStatus_A' : batteryStatus_A, 'batteryCharge_Mode_A' : batteryCharge_Mode_A, 'batteryRemain_Min_A' : batteryRemain_Min_A, 'batteryRemain_Sec_A' : batteryRemain_Sec_A, 'batteryVolt_A' : str(batteryVolt_A), 'batteryTemp_A' : str(batteryTemp_A), 'batteryRemain_Percent_A' : str(batteryRemain_Percent_A)}]}, \
+		         { 'lastBattery_Year_A' : str(lastBattery_Year_A), 'lastBattery_Mon_A' : str(lastBattery_Mon_A), 'lastBattery_Day_A' : str(lastBattery_Day_A)}, { 'nextBattery_Year_A' : str(nextBattery_Year_A), 'nextBattery_Mon_A' : str(nextBattery_Mon_A), 'nextBattery_Day_A' : str(nextBattery_Day_A)}], \
+		         'battery_B' : [{ 'status' : [{ 'batteryHealth_B' : batteryHealth_B, 'batteryStatus_B' : batteryStatus_B, 'batteryCharge_Mode_B' : batteryCharge_Mode_B, 'batteryRemain_Min_B' : batteryRemain_Min_B, 'batteryRemain_Sec_B' : batteryRemain_Sec_B, 'batteryVolt_B' : str(batteryVolt_B), 'batteryTemp_B' : str(batteryTemp_B), 'batteryRemain_Percent_B' : str(batteryRemain_Percent_B)}]}, \
+		         { 'lastBattery_Year_B' : str(lastBattery_Year_B), 'lastBattery_Mon_B' : str(lastBattery_Mon_B), 'lastBattery_Day_B' : str(lastBattery_Day_B)}, { 'nextBattery_Year_B' : str(nextBattery_Year_B), 'nextBattery_Mon_B' : str(nextBattery_Mon_B), 'nextBattery_Day_B' : str(nextBattery_Day_B)}]})
+	except:
+		print('Post To OpenStack Error !')
+
 class jsonReturn(Resource):
  	def get(self):
- 		connectDevice()
  		global serialName_A, systemMode_A, UPS_Life_A
  		global inputLine_A, inputFreq_A, inputVolt_A
  		global outputLine_A, outputFreq_A, outputVolt_A, outputWatt_A, outputAmp_A, outputPercent_A
@@ -453,7 +469,7 @@ class jsonReturn(Resource):
  		         { 'lastBattery_Year_A' : str(lastBattery_Year_A), 'lastBattery_Mon_A' : str(lastBattery_Mon_A), 'lastBattery_Day_A' : str(lastBattery_Day_A)}, { 'nextBattery_Year_A' : str(nextBattery_Year_A), 'nextBattery_Mon_A' : str(nextBattery_Mon_A), 'nextBattery_Day_A' : str(nextBattery_Day_A)}], \
  		         'battery_B' : [{ 'status' : [{ 'batteryHealth_B' : batteryHealth_B, 'batteryStatus_B' : batteryStatus_B, 'batteryCharge_Mode_B' : batteryCharge_Mode_B, 'batteryRemain_Min_B' : batteryRemain_Min_B, 'batteryRemain_Sec_B' : batteryRemain_Sec_B, 'batteryVolt_B' : str(batteryVolt_B), 'batteryTemp_B' : str(batteryTemp_B), 'batteryRemain_Percent_B' : str(batteryRemain_Percent_B)}]}, \
  		         { 'lastBattery_Year_B' : str(lastBattery_Year_B), 'lastBattery_Mon_B' : str(lastBattery_Mon_B), 'lastBattery_Day_B' : str(lastBattery_Day_B)}, { 'nextBattery_Year_B' : str(nextBattery_Year_B), 'nextBattery_Mon_B' : str(nextBattery_Mon_B), 'nextBattery_Day_B' : str(nextBattery_Day_B)}]}		
-api.add_resource(jsonReturn, '/')
+api.add_resource(jsonReturn, '/json')
  
 @app.route('/show')
 def dashBoard():
@@ -529,4 +545,4 @@ def dashBoard():
 
 if __name__ == '__main__':
 #	app.run(debug = True)
-	app.run(host = '0.0.0.0', port=3000, debug = True)
+	app.run(host = '0.0.0.0', port=5000)

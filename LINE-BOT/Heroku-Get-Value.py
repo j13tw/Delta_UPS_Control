@@ -108,19 +108,7 @@ def LineBot():
 
 #		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
 #		change the json key to local temp value
-	
 
-@app.route('/show', methods=['GET'])
-def show():
-	global connect, systemMode
-	global inputLine, inputFreq, inputVolt
-	global outputLine, outputFreq, outputVolt, outputWatt, outputAmp, outputPercent
-	global batteryHealth, batteryStatus, batteryCharge_Mode
-	global batteryVolt, batteryTemp, batteryRemain_Percent
-	global lastBattery_Year, lastBattery_Mon, lastBattery_Day
-	global nextBattery_Year, nextBattery_Mon, nextBattery_Day
-
-	
 
 if __name__ == '__main__':
 #	app.run(debug = True)
