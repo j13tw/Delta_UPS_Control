@@ -1,9 +1,8 @@
 #!/usr/bin/python
-import json
 import requests
+import json
 import os, sys
 import socket
-from flask import Flask
 from flask import Flask, request
 from flask import render_template
 from decimal import getcontext, Decimal
@@ -66,6 +65,8 @@ hostname = ''
 port = ''
 hostHealth = ''
 
+
+
 @app.route('/', methods=['POST', 'GET'])
 def dashBoard():
 	global hostname, port, hostHealth
@@ -106,8 +107,8 @@ def dashBoard():
 	  	print ('http://', hostname, ' Server IP Not Found !')
 	  	hostHealth = 'IP Error'
 
-	if request.method == 'POST':
-		try:
+	try:
+		if request.method == 'POST':
 			r = request.json
 			value = r.content.decode('utf-8')	# get return json value
 			key = json.loads(value)
@@ -177,11 +178,7 @@ def dashBoard():
 			nextBattery_Day_B = nextBattery_B['nextBattery_Day_B']
 			hostHealth = 'Alive'
 			return 'OK !'
-		except:
-			hostHealth = 'IP Error'
-			print ('Server Data Error !')
-			return 'Server Error !'
-	else:
+	except:
 		return render_template('mainBoard.html', \
 		 		hostname = hostname, \
 		 		port = port, \
