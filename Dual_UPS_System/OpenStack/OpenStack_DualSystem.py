@@ -69,7 +69,6 @@ hostHealth = ''
 
 @app.route('/', methods=['POST', 'GET'])
 def dashBoard():
-	def connectDevice():
 	global hostname, port, hostHealth
 	global serialName_A, systemMode_A, ups_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
