@@ -4,6 +4,7 @@ import requests
 import os, sys
 import socket
 from flask import Flask
+from flask import Flask, request
 from flask import render_template
 from decimal import getcontext, Decimal
 
@@ -64,8 +65,6 @@ nextBattery_Day_B = 0
 hostname = ''
 port = ''
 hostHealth = ''
-
-
 
 @app.route('/', methods=['POST', 'GET'])
 def dashBoard():
