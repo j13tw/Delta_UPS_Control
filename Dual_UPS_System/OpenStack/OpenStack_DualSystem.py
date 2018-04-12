@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import requests
 import json
 import os, sys
 import socket
@@ -107,8 +106,8 @@ def dashBoard():
 	  	print ('http://', hostname, ' Server IP Not Found !')
 	  	hostHealth = 'IP Error'
 
-	try:
-		if request.method == 'POST':
+	if request.method == 'POST':
+		try:
 			r = request.json
 			value = r.content.decode('utf-8')	# get return json value
 			key = json.loads(value)
@@ -178,7 +177,11 @@ def dashBoard():
 			nextBattery_Day_B = nextBattery_B['nextBattery_Day_B']
 			hostHealth = 'Alive'
 			return 'OK !'
-	except:
+		except:
+			hostHealth = 'IP Error'
+			print ('Server Data Error !')
+			return 'Server Error !'
+	else:
 		return render_template('mainBoard.html', \
 		 		hostname = hostname, \
 		 		port = port, \
