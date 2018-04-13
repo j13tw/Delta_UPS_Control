@@ -110,7 +110,7 @@ def dashBoard():
 	if request.method == 'POST':
 		try:
 			r = request.json
-			value = r.content.decode('utf-8')	# get return json value
+			value = json.dumps(r)	# get return json value
 			key = json.loads(value)
 	#		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
 	#		change the json key to local temp value
@@ -188,6 +188,7 @@ def dashBoard():
 		 		port = port, \
 		 		hostHealth = hostHealth, \
 		 		serName_A = serialName_A, \
+		 		ups_Life_A = ups_Life_A, \
 		 		inputVolt_A = inputVolt_A, \
 		 		inputFreq_A = inputFreq_A, \
 		 		inputLine_A = inputLine_A, \
@@ -213,6 +214,7 @@ def dashBoard():
 		 		nextBattery_Mon_A = nextBattery_Mon_A, \
 		 		nextBattery_Day_A = nextBattery_Day_A, \
 		 		serName_B = serialName_B, \
+		 		ups_Life_B = ups_Life_B, \
 				inputVolt_B = inputVolt_B, \
 				inputFreq_B = inputFreq_B, \
 				inputLine_B = inputLine_B, \
