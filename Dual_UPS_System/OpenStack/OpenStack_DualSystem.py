@@ -3,6 +3,7 @@ import requests
 import json
 import os, sys
 import socket
+import datetime
 from flask import Flask, request
 from flask import render_template
 from decimal import getcontext, Decimal
@@ -61,14 +62,16 @@ lastBattery_Day_B = 0
 nextBattery_Year_B = 0
 nextBattery_Mon_B = 0
 nextBattery_Day_B = 0
-hostname = ''
-port = ''
+hostname = '127.0.0.1'					#chang to your service IP
+port = '5000'							#chang to your service Port
 hostHealth = ''
+releaseTime = ''
 
 
 
 @app.route('/', methods=['POST', 'GET'])
 def dashBoard():
+	global releaseTime
 	global hostname, port, hostHealth
 	global serialName_A, systemMode_A, ups_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
@@ -84,9 +87,6 @@ def dashBoard():
 	global batteryRemain_Min_B, batteryRemain_Sec_B, batteryVolt_B, batteryTemp_B, batteryRemain_Percent_B
 	global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
 	global nextBattery_Year_B, nextBattery_Mon_B, nextBattery_Day_B
-	
-	hostname = '10.0.0.164'					#chang to your service IP
-	port = '5000'							#chang to your service Port
 	localOS = os.system('uname 2>&1 >/var/tmp/os.txt')
 	if(localOS == 0):
 		response = os.system('ping -c 1 ' + hostname + ' 2>&1 >/var/tmp/ping.txt')
@@ -109,6 +109,8 @@ def dashBoard():
 
 	if request.method == 'POST':
 		try:
+			releaseTime = datetime.datetime.now()
+			print (releaseTime)
 			r = request.json
 			value = json.dumps(r)	# get return json value
 			key = json.loads(value)
@@ -184,6 +186,7 @@ def dashBoard():
 			return 'Server Error !'
 	else:
 		return render_template('mainBoard.html', \
+				releaseTime = releaseTime, \
 		 		hostname = hostname, \
 		 		port = port, \
 		 		hostHealth = hostHealth, \
@@ -243,4 +246,4 @@ def dashBoard():
 
 if __name__ == '__main__':
 #	app.run(debug = True)
-	app.run(host = '0.0.0.0', port=5000, debug = True)
+	app.run(host = '127.0.0.2', port=5001)

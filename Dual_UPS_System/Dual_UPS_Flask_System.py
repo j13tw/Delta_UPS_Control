@@ -2,6 +2,7 @@
 import serial, time
 import requests
 from flask import Flask
+import socket
 from flask_restful import Resource, Api
 from flask import render_template
 from decimal import getcontext, Decimal
@@ -64,8 +65,13 @@ lastBattery_Day_B = 0
 nextBattery_Year_B = 0
 nextBattery_Mon_B = 0
 nextBattery_Day_B = 0
+ser_A = serial.Serial()
+ser_B = serial.Serial()
+hostname = '127.0.0.2'
+port = '5001'
 
 def connectDevice():
+	global ser_A, ser_B, hostname, port
 	global serialName_A, systemMode_A, UPS_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
 	global outputLine_A, outputFreq_A, outputVolt_A, outputWatt_A, outputAmp_A, outputPercent_A
@@ -81,31 +87,25 @@ def connectDevice():
 	global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
 	global nextBattery_Year_B, nextBattery_Mon_B, nextBattery_Day_B
 	getcontext().prec = 6
-	portAcess_A = False
+
 	try:
-		ser = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
-		portAcess_A = True
+		ser_A = serial.Serial('COM3', 9600, timeout=1)
 		UPS_Life_A = 'onLine(在線)'
-	except:
-		print ("USB Port A Open Error !")
-		portAcess_A = False	
-		UPS_Life_A = 'offLine(離線)'
-	if(portAcess_A):
-		serialName_A = ser.name + " (左)"
+		serialName_A = ser_A.name + " (左)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
-		ser.write(b'~00P000STI')                       		# write a UPS RS232 format string
-	#	ser.write(b'~00D0101;600;2190')   			# Return data format 1 Test
-	#	ser.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
-		s = ser.read(30)        							# read up to return data 30 bytes (timeout)
+	#	ser_A.write(b'~00P000STI')                       		# write a UPS RS232 format string
+		ser_A.write(b'~00D0101;600;2190')   			# Return data format 1 Test
+	#	ser_A.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
+		s = ser_A.read(30)        							# read up to return data 30 bytes (timeout)
 	#	print(s)
 		countLine = ''
 		s = s.decode('ascii')								# decode UPS return string format
 	# 	print(s)
 		tmp = str(s).split(';')								# split data by ';' on data format
-	# 	print (tmp)
+	#	print (tmp)
 		i = 0
 		for j in tmp[0]:
 	 		if  i >= 7:
@@ -118,12 +118,19 @@ def connectDevice():
 		print ('輸入線路 : ' + str(inputLine_A) + ' 號線路')
 		print ('輸入頻率 : ' + str(inputFreq_A) + ' Hz')
 		print ('輸入電壓 : ' + str(inputVolt_A) + ' V')
-		print('-----------------------------------------')
-		time.sleep(1)
+		ser_A.close()
+	except:
+		print ("USB Port A Open Error !")
+		UPS_Life_A = 'offLine(離線)'
+		ser_A.close()
+	print('-----------------------------------------')
+	try:
+		ser_A.open()
+		UPS_Life_A = 'onLine(在線)'
 	#	--> STO
-		ser.write(b'~00P000STO')
-	#	ser.write(b'~00D0230;600;1;2210;;03169;037')
-		s = ser.read(30)
+	#	ser_A.write(b'~00P000STO')
+		ser_A.write(b'~00D0230;600;1;2210;;03169;037')
+		s = ser_A.read(30)
 		countMode = ''
 		s = s.decode('ascii')
 	# 	print(s)
@@ -168,12 +175,19 @@ def connectDevice():
 		print ('輸出電流 : %3.3f A' %outputAmp_A)
 		print ('輸出瓦特 : ' + str(outputWatt_A/1000) + ' KW')
 		print ('輸出負載比 : ' + str(outputPercent_A) + ' %')
-		print('-----------------------------------------')
-		time.sleep(1)
+		ser_A.close()
+	except:
+		print ("USB Port A Open Error !")
+		UPS_Life_A = 'offLine(離線)'
+		ser_A.close()
+	print('-----------------------------------------')
+	try:
+		ser_A.open()
+		UPS_Life_A = 'onLine(在線)'
 	#	--> STB 輸入資料
-		ser.write(b'~00P000STB')
-	#	ser.write(b'~00D0250;0;1;;;000;2720;;031;100')
-		s = ser.read(40)
+	#	ser_A.write(b'~00P000STB')
+		ser_A.write(b'~00D0250;0;1;;;000;2720;;031;100')
+		s = ser_A.read(40)
 		batteryCount = ''
 		s = s.decode('ascii')
 	#	print(s)
@@ -227,12 +241,19 @@ def connectDevice():
 		print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec_A)
 		print ('電量剩餘百分比 : ' + str(batteryRemain_Percent_A) + ' %')
 		print ('UPS 內部溫度 : ' + str(batteryTemp_A) + ' °C')
-		print('-----------------------------------------')
-		time.sleep(1)
+		ser_A.close()
+	except:
+		print ("USB Port A Open Error !")
+		UPS_Life_A = 'offLine(離線)'
+		ser_A.close()
+	print('-----------------------------------------')
+	try:
+		ser_A.open()
+		UPS_Life_A = 'onLine(在線)'	
 	# 	--> BRD
-		ser.write(b'~00P000BRD')
-	#	ser.write(b'~00D01720170322;20200322')
-		s = ser.read(30)
+	#	ser_A.write(b'~00P000BRD')
+		ser_A.write(b'~00D01720170322;20200322')
+		s = ser_A.read(30)
 		countLastDate = ''
 		s = s.decode('ascii')
 	#	print(s)
@@ -254,33 +275,31 @@ def connectDevice():
 		nextBattery_Day_A = nextDate - nextBattery_Mon_A*100 - nextBattery_Year_A*10000
 		print ('電池更換時間 : ' + str(lastBattery_Year_A) + ' 年 ' + str(lastBattery_Mon_A) + ' 月 ' + str(lastBattery_Day_A) + ' 日')
 		print ('下次更換時間 : ' + str(nextBattery_Year_A) + ' 年 ' + str(nextBattery_Mon_A) + ' 月 ' + str(nextBattery_Day_A) + ' 日')
-		print('-----------------------------------------')
-		ser.close()             # close port
-		time.sleep(1)
-
-	portAcess_B = False
-	try:
-		ser = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)                    # select which your port
-		portAcess_B = True
-		UPS_Life_B = 'onLine(在線)'
+		ser_A.close()             # close port
 	except:
-		print ("USB Port B Open Error !")
-		portAcess_B = False
-		UPS_Life_B = 'offLine(離線)'
-	if(portAcess_B):
-		serialName_B = ser.name+ " (右)"
+		print ("USB Port A Open Error !")
+		UPS_Life_A = 'offLine(離線)'
+		ser_A.close()             # close port
+	print('-----------------------------------------')
+
+	try:
+		ser_B = serial.Serial('COM3', 9600, timeout=1)
+		UPS_Life_B = 'onLine(在線)'
+		serialName_B = ser_B.name + " (右)"
+		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
-		ser.write(b'~00P000STI')                       		# write a UPS RS232 format string
-	#	ser.write(bytes(b'~00D0101;600;2190'))   			# Return data format 1 Test
-	#	ser.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
-		s = ser.read(30)        							# read up to return data 30 bytes (timeout)
+	#	ser_B.write(b'~00P000STI')                       		# write a UPS RS232 format string
+		ser_B.write(b'~00D0101;600;2190')   			# Return data format 1 Test
+	#	ser_B.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
+		s = ser_B.read(30)        							# read up to return data 30 bytes (timeout)
+	#	print(s)
 		countLine = ''
 		s = s.decode('ascii')								# decode UPS return string format
-	#	print(s)
+	# 	print(s)
 		tmp = str(s).split(';')								# split data by ';' on data format
-	# 	print (tmp)
+	#	print (tmp)
 		i = 0
 		for j in tmp[0]:
 	 		if  i >= 7:
@@ -293,15 +312,22 @@ def connectDevice():
 		print ('輸入線路 : ' + str(inputLine_B) + ' 號線路')
 		print ('輸入頻率 : ' + str(inputFreq_B) + ' Hz')
 		print ('輸入電壓 : ' + str(inputVolt_B) + ' V')
-		print('-----------------------------------------')
-		time.sleep(1)
+		ser_B.close()
+	except:
+		print ("USB Port B Open Error !")
+		UPS_Life_B = 'offLine(離線)'
+		ser_B.close()
+	print('-----------------------------------------')
+	try:
+		ser_B.open()
+		UPS_Life_B = 'onLine(在線)'
 	#	--> STO
-		ser.write(b'~00P000STO')
-	#	ser.write(b'~00D0230;600;1;2210;;03169;037')
-		s = ser.read(30)
+	#	ser_B.write(b'~00P000STO')
+		ser_B.write(b'~00D0230;600;1;2210;;03169;037')
+		s = ser_B.read(30)
 		countMode = ''
 		s = s.decode('ascii')
-	#	print(s)
+	# 	print(s)
 		tmp = str(s).split(';')
 	# 	print (tmp)
 		i = 0
@@ -310,7 +336,7 @@ def connectDevice():
 				countMode += str(j) 
 			i = i + 1
 		i = 0
-	#	print(countMode)
+	# 	print(countMode)
 		mode = int(countMode)
 		systemMode_B = ''
 		if mode == 0:
@@ -343,12 +369,19 @@ def connectDevice():
 		print ('輸出電流 : %3.3f A' %outputAmp_B)
 		print ('輸出瓦特 : ' + str(outputWatt_B/1000) + ' KW')
 		print ('輸出負載比 : ' + str(outputPercent_B) + ' %')
-		print('-----------------------------------------')
-		time.sleep(1)
+		ser_B.close()
+	except:
+		print ("USB Port B Open Error !")
+		UPS_Life_B = 'offLine(離線)'
+		ser_B.close()
+	print('-----------------------------------------')
+	try:
+		ser_B.open()
+		UPS_Life_B = 'onLine(在線)'
 	#	--> STB 輸入資料
-		ser.write(b'~00P000STB')
-	#	ser.write(b'~00D0250;0;1;;;000;2720;;031;100')
-		s = ser.read(40)
+	#	ser_B.write(b'~00P000STB')
+		ser_B.write(b'~00D0250;0;1;;;000;2720;;031;100')
+		s = ser_B.read(40)
 		batteryCount = ''
 		s = s.decode('ascii')
 	#	print(s)
@@ -402,12 +435,19 @@ def connectDevice():
 		print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec_B)
 		print ('電量剩餘百分比 : ' + str(batteryRemain_Percent_B) + ' %')
 		print ('UPS 內部溫度 : ' + str(batteryTemp_B) + ' °C')
-		print('-----------------------------------------')
-		time.sleep(1)
+		ser_B.close()
+	except:
+		print ("USB Port B Open Error !")
+		UPS_Life_B = 'offLine(離線)'
+		ser_B.close()
+	print('-----------------------------------------')
+	try:
+		ser_B.open()
+		UPS_Life_B = 'onLine(在線)'	
 	# 	--> BRD
-		ser.write(b'~00P000BRD')
-	#	ser.write(b'~00D01720170322;20200322')
-		s = ser.read(30)
+	#	ser_B.write(b'~00P000BRD')
+		ser_B.write(b'~00D01720170322;20200322')
+		s = ser_B.read(30)
 		countLastDate = ''
 		s = s.decode('ascii')
 	#	print(s)
@@ -429,10 +469,15 @@ def connectDevice():
 		nextBattery_Day_B = nextDate - nextBattery_Mon_B*100 - nextBattery_Year_B*10000
 		print ('電池更換時間 : ' + str(lastBattery_Year_B) + ' 年 ' + str(lastBattery_Mon_B) + ' 月 ' + str(lastBattery_Day_B) + ' 日')
 		print ('下次更換時間 : ' + str(nextBattery_Year_B) + ' 年 ' + str(nextBattery_Mon_B) + ' 月 ' + str(nextBattery_Day_B) + ' 日')
-		ser.close()             # close port
-		time.sleep(1)
+		ser_B.close()             # close port
+	except:
+		print ("USB Port B Open Error !")
+		UPS_Life_B = 'offLine(離線)'
+		ser_B.close()             # close port
+	print('-----------------------------------------')
 	try:
-		r = requests.post("http://10.20.0.76:5000/", json={ 'connect_A' : serialName_A, 'connect_B' : serialName_B, 'ups_Life_A' : UPS_Life_A, 'ups_Life_B' : UPS_Life_B, \
+		distance = 'http://' + hostname + ':' + port + '/'
+		r = requests.post(distance, json={ 'connect_A' : serialName_A, 'connect_B' : serialName_B, 'ups_Life_A' : UPS_Life_A, 'ups_Life_B' : UPS_Life_B, \
 		         'input_A' : [{ 'inputLine_A' : str(inputLine_A), 'inputFreq_A' : str(inputFreq_A), 'inputVolt_A' : str(inputVolt_A) }], \
 		         'input_B' : [{ 'inputLine_B' : str(inputLine_B), 'inputFreq_B' : str(inputFreq_B), 'inputVolt_B' : str(inputVolt_B) }], \
 		         'output_A' : [{ 'systemMode_A' : systemMode_A, 'outputLine_A' : str(outputLine_A), 'outputFreq_A' : str(outputFreq_A), 'outputVolt_A' : str(outputVolt_A), 'outputAmp_A' : str(outputAmp_A), 'outputWatt_A' : str(outputWatt_A/1000), 'outputPercent_A' : str(outputPercent_A)}], \
@@ -441,8 +486,10 @@ def connectDevice():
 		         { 'lastBattery_Year_A' : str(lastBattery_Year_A), 'lastBattery_Mon_A' : str(lastBattery_Mon_A), 'lastBattery_Day_A' : str(lastBattery_Day_A)}, { 'nextBattery_Year_A' : str(nextBattery_Year_A), 'nextBattery_Mon_A' : str(nextBattery_Mon_A), 'nextBattery_Day_A' : str(nextBattery_Day_A)}], \
 		         'battery_B' : [{ 'status' : [{ 'batteryHealth_B' : batteryHealth_B, 'batteryStatus_B' : batteryStatus_B, 'batteryCharge_Mode_B' : batteryCharge_Mode_B, 'batteryRemain_Min_B' : batteryRemain_Min_B, 'batteryRemain_Sec_B' : batteryRemain_Sec_B, 'batteryVolt_B' : str(batteryVolt_B), 'batteryTemp_B' : str(batteryTemp_B), 'batteryRemain_Percent_B' : str(batteryRemain_Percent_B)}]}, \
 		         { 'lastBattery_Year_B' : str(lastBattery_Year_B), 'lastBattery_Mon_B' : str(lastBattery_Mon_B), 'lastBattery_Day_B' : str(lastBattery_Day_B)}, { 'nextBattery_Year_B' : str(nextBattery_Year_B), 'nextBattery_Mon_B' : str(nextBattery_Mon_B), 'nextBattery_Day_B' : str(nextBattery_Day_B)}]})
+		print('Post To OpenStack OK !')
 	except:
 		print('Post To OpenStack Error !')
+	print('-----------------------------------------')
 
 class jsonReturn(Resource):
  	def get(self):
