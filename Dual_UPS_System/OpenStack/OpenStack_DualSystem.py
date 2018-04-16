@@ -62,7 +62,7 @@ lastBattery_Day_B = 0
 nextBattery_Year_B = 0
 nextBattery_Mon_B = 0
 nextBattery_Day_B = 0
-hostname = '127.0.0.1'					#chang to your service IP
+hostname = '10.0.0.197'					#chang to your service IP
 port = '5000'							#chang to your service Port
 hostHealth = ''
 releaseTime = ''
@@ -247,4 +247,4 @@ def dashBoard():
 
 if __name__ == '__main__':
 #	app.run(debug = True)
-	app.run(host = '127.0.0.2', port=5001)
+	app.run(host = '0.0.0.0', port=5000)

@@ -1,4 +1,6 @@
 #!/usr/bin/python3.6
+# -*- coding: UTF-8 -*-
+
 import serial, time
 import requests
 import json
@@ -12,7 +14,7 @@ from serial import SerialException
 requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)
-app.config['MQTT_BROKER_URL'] = '127.0.0.1'
+app.config['MQTT_BROKER_URL'] = '10.20.0.90'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_REFRESH_TIME'] = 1.0 
 mqtt = Mqtt(app)
@@ -72,8 +74,8 @@ nextBattery_Mon_B = 0
 nextBattery_Day_B = 0
 ser_A = serial.Serial()
 ser_B = serial.Serial()
-hostname = '127.0.0.2'
-port = '5001'
+hostname = '10.20.0.76'
+port = '5000'
 jsonData = ''
 
 def connectDevice():
@@ -95,15 +97,15 @@ def connectDevice():
 	getcontext().prec = 6
 
 	try:
-		ser_A = serial.Serial('COM3', 9600, timeout=1)
+		ser_A = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
 		UPS_Life_A = 'onLine(在線)'
 		serialName_A = ser_A.name + " (左)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
-	#	ser_A.write(b'~00P000STI')                       		# write a UPS RS232 format string
-		ser_A.write(b'~00D0101;600;2190')   			# Return data format 1 Test
+		ser_A.write(b'~00P000STI')                       		# write a UPS RS232 format string
+	#	ser_A.write(b'~00D0101;600;2190')   			# Return data format 1 Test
 	#	ser_A.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
 		s = ser_A.read(30)        							# read up to return data 30 bytes (timeout)
 	#	print(s)
@@ -134,8 +136,8 @@ def connectDevice():
 		ser_A.open()
 		UPS_Life_A = 'onLine(在線)'
 	#	--> STO
-	#	ser_A.write(b'~00P000STO')
-		ser_A.write(b'~00D0230;600;1;2210;;03169;037')
+		ser_A.write(b'~00P000STO')
+	#	ser_A.write(b'~00D0230;600;1;2210;;03169;037')
 		s = ser_A.read(30)
 		countMode = ''
 		s = s.decode('ascii')
@@ -191,8 +193,8 @@ def connectDevice():
 		ser_A.open()
 		UPS_Life_A = 'onLine(在線)'
 	#	--> STB 輸入資料
-	#	ser_A.write(b'~00P000STB')
-		ser_A.write(b'~00D0250;0;1;;;000;2720;;031;100')
+		ser_A.write(b'~00P000STB')
+	#	ser_A.write(b'~00D0250;0;1;;;000;2720;;031;100')
 		s = ser_A.read(40)
 		batteryCount = ''
 		s = s.decode('ascii')
@@ -257,8 +259,8 @@ def connectDevice():
 		ser_A.open()
 		UPS_Life_A = 'onLine(在線)'	
 	# 	--> BRD
-	#	ser_A.write(b'~00P000BRD')
-		ser_A.write(b'~00D01720170322;20200322')
+		ser_A.write(b'~00P000BRD')
+	#	ser_A.write(b'~00D01720170322;20200322')
 		s = ser_A.read(30)
 		countLastDate = ''
 		s = s.decode('ascii')
@@ -289,15 +291,15 @@ def connectDevice():
 	print('-----------------------------------------')
 
 	try:
-		ser_B = serial.Serial('COM3', 9600, timeout=1)
+		ser_B = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)
 		UPS_Life_B = 'onLine(在線)'
 		serialName_B = ser_B.name + " (右)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
-	#	ser_B.write(b'~00P000STI')                       		# write a UPS RS232 format string
-		ser_B.write(b'~00D0101;600;2190')   			# Return data format 1 Test
+		ser_B.write(b'~00P000STI')                       		# write a UPS RS232 format string
+	#	ser_B.write(b'~00D0101;600;2190')   			# Return data format 1 Test
 	#	ser_B.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
 		s = ser_B.read(30)        							# read up to return data 30 bytes (timeout)
 	#	print(s)
@@ -328,8 +330,8 @@ def connectDevice():
 		ser_B.open()
 		UPS_Life_B = 'onLine(在線)'
 	#	--> STO
-	#	ser_B.write(b'~00P000STO')
-		ser_B.write(b'~00D0230;600;1;2210;;03169;037')
+		ser_B.write(b'~00P000STO')
+	#	ser_B.write(b'~00D0230;600;1;2210;;03169;037')
 		s = ser_B.read(30)
 		countMode = ''
 		s = s.decode('ascii')
@@ -385,8 +387,8 @@ def connectDevice():
 		ser_B.open()
 		UPS_Life_B = 'onLine(在線)'
 	#	--> STB 輸入資料
-	#	ser_B.write(b'~00P000STB')
-		ser_B.write(b'~00D0250;0;1;;;000;2720;;031;100')
+		ser_B.write(b'~00P000STB')
+	#	ser_B.write(b'~00D0250;0;1;;;000;2720;;031;100')
 		s = ser_B.read(40)
 		batteryCount = ''
 		s = s.decode('ascii')
@@ -451,8 +453,8 @@ def connectDevice():
 		ser_B.open()
 		UPS_Life_B = 'onLine(在線)'	
 	# 	--> BRD
-	#	ser_B.write(b'~00P000BRD')
-		ser_B.write(b'~00D01720170322;20200322')
+		ser_B.write(b'~00P000BRD')
+	#	ser_B.write(b'~00D01720170322;20200322')
 		s = ser_B.read(30)
 		countLastDate = ''
 		s = s.decode('ascii')
@@ -492,10 +494,11 @@ def connectDevice():
 		print('Post To OpenStack Error !')
 	print('-----------------------------------------')
 	try:
-		mqtt.publish('mytopic', jsonData)
-		print('MQTT To Server Error !')
+		mqtt.publish('UPS_Monitor', jsonData)
+		print('MQTT To Server OK !')
 	except:
 		print('MQTT To Server Error !')
+	print('-----------------------------------------')
 class jsonReturn(Resource):
  	def get(self):
  		global jsonData
