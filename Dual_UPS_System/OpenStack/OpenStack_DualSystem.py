@@ -110,11 +110,12 @@ def dashBoard():
 	if request.method == 'POST':
 		try:
 			releaseTime = datetime.datetime.now()
-			print (releaseTime)
+			print ('Data Relaod : ', releaseTime)
 			r = request.json
-			value = json.dumps(r)	# get return json value
-			key = json.loads(value)
-	#		print (json.dumps(key , sort_keys=True, indent=4, separators=(',', ': ')))	# show on the all split json format
+	#		print(r)
+			key = json.loads(r)
+	#		print (key)
+	#		print (json.dumps(r , sort_keys=True))	# show on the all split json format
 	#		change the json key to local temp value
 			ups_Life_A = key['ups_Life_A']
 			serialName_A = key['connect_A']

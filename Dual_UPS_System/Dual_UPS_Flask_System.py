@@ -1,8 +1,9 @@
 #!/usr/bin/python3.6
 import serial, time
 import requests
+import json
 from flask import Flask
-import socket
+from flask_mqtt import Mqtt
 from flask_restful import Resource, Api
 from flask import render_template
 from decimal import getcontext, Decimal
@@ -11,6 +12,10 @@ from serial import SerialException
 requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)
+app.config['MQTT_BROKER_URL'] = '127.0.0.1'
+app.config['MQTT_BROKER_PORT'] = 1883
+app.config['MQTT_REFRESH_TIME'] = 1.0 
+mqtt = Mqtt(app)
 api = Api(app)
 
 UPS_Life_A = ''
@@ -69,9 +74,10 @@ ser_A = serial.Serial()
 ser_B = serial.Serial()
 hostname = '127.0.0.2'
 port = '5001'
+jsonData = ''
 
 def connectDevice():
-	global ser_A, ser_B, hostname, port
+	global ser_A, ser_B, hostname, port, jsonData
 	global serialName_A, systemMode_A, UPS_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
 	global outputLine_A, outputFreq_A, outputVolt_A, outputWatt_A, outputAmp_A, outputPercent_A
@@ -475,47 +481,25 @@ def connectDevice():
 		UPS_Life_B = 'offLine(離線)'
 		ser_B.close()             # close port
 	print('-----------------------------------------')
+
+	jsonData = '{ "connect_A" : "' + serialName_A + '", "connect_B" : "' + serialName_B + '", "ups_Life_A" : "' + UPS_Life_A + '", "ups_Life_B" : "' + UPS_Life_B + '" ,"input_A" : [{ "inputLine_A" : "' + str(inputLine_A) + '", "inputFreq_A" : "' + str(inputFreq_A) + '", "inputVolt_A" : "' + str(inputVolt_A) + '"}], "input_B" : [{ "inputLine_B" : "' + str(inputLine_B) + '", "inputFreq_B" : "' + str(inputFreq_B) + '", "inputVolt_B" : "' + str(inputVolt_B) + '"}], "output_A" : [{ "systemMode_A" : "' + systemMode_A + '", "outputLine_A" : "' + str(outputLine_A) + '", "outputFreq_A" : "' + str(outputFreq_A) + '", "outputVolt_A" : "' + str(outputVolt_A) + '", "outputAmp_A" : "' + str(outputAmp_A) + '", "outputWatt_A" : "' + str(outputWatt_A/1000) + '", "outputPercent_A" : "' + str(outputPercent_A) + '"}], "output_B" : [{ "systemMode_B" : "' + systemMode_B + '", "outputLine_B" : "' + str(outputLine_B) + '", "outputFreq_B" : "' + str(outputFreq_B) + '", "outputVolt_B" : "' + str(outputVolt_B) + '", "outputAmp_B" : "' + str(outputAmp_B) + '", "outputWatt_B" : "' + str(outputWatt_B/1000) + '", "outputPercent_B" : "' + str(outputPercent_B) + '"}], "battery_A" : [{ "status" : [{ "batteryHealth_A" : "' + batteryHealth_A + '", "batteryStatus_A" : "' + batteryStatus_A + '", "batteryCharge_Mode_A" : "' + batteryCharge_Mode_A + '", "batteryRemain_Min_A" : "' + batteryRemain_Min_A + '", "batteryRemain_Sec_A" : "' + batteryRemain_Sec_A + '", "batteryVolt_A" : "' + str(batteryVolt_A) + '", "batteryTemp_A" : "' + str(batteryTemp_A) + '", "batteryRemain_Percent_A" : "' + str(batteryRemain_Percent_A) + '"}]}, { "lastBattery_Year_A" : "' + str(lastBattery_Year_A) + '", "lastBattery_Mon_A" : "' + str(lastBattery_Mon_A) + '", "lastBattery_Day_A" : "' + str(lastBattery_Day_A) + '"}, { "nextBattery_Year_A" : "' + str(nextBattery_Year_A) + '", "nextBattery_Mon_A" : "' + str(nextBattery_Mon_A) + '", "nextBattery_Day_A" : "' + str(nextBattery_Day_A) + '"}], "battery_B" : [{ "status" : [{ "batteryHealth_B" : "' + batteryHealth_B + '", "batteryStatus_B" : "' + batteryStatus_B + '", "batteryCharge_Mode_B" : "' + batteryCharge_Mode_B + '", "batteryRemain_Min_B" : "' + batteryRemain_Min_B + '", "batteryRemain_Sec_B" : "' + batteryRemain_Sec_B + '", "batteryVolt_B" : "' + str(batteryVolt_B) + '", "batteryTemp_B" : "' + str(batteryTemp_B) + '", "batteryRemain_Percent_B" : "' + str(batteryRemain_Percent_B) + '"}]}, { "lastBattery_Year_B" : "' + str(lastBattery_Year_B) + '", "lastBattery_Mon_B" : "' + str(lastBattery_Mon_B) + '", "lastBattery_Day_B" : "' + str(lastBattery_Day_B) + '"}, { "nextBattery_Year_B" : "' + str(nextBattery_Year_B) + '", "nextBattery_Mon_B" : "' + str(nextBattery_Mon_B) + '", "nextBattery_Day_B" : "' + str(nextBattery_Day_B) + '"}]}'
+
 	try:
 		distance = 'http://' + hostname + ':' + port + '/'
-		r = requests.post(distance, json={ 'connect_A' : serialName_A, 'connect_B' : serialName_B, 'ups_Life_A' : UPS_Life_A, 'ups_Life_B' : UPS_Life_B, \
-		         'input_A' : [{ 'inputLine_A' : str(inputLine_A), 'inputFreq_A' : str(inputFreq_A), 'inputVolt_A' : str(inputVolt_A) }], \
-		         'input_B' : [{ 'inputLine_B' : str(inputLine_B), 'inputFreq_B' : str(inputFreq_B), 'inputVolt_B' : str(inputVolt_B) }], \
-		         'output_A' : [{ 'systemMode_A' : systemMode_A, 'outputLine_A' : str(outputLine_A), 'outputFreq_A' : str(outputFreq_A), 'outputVolt_A' : str(outputVolt_A), 'outputAmp_A' : str(outputAmp_A), 'outputWatt_A' : str(outputWatt_A/1000), 'outputPercent_A' : str(outputPercent_A)}], \
-		         'output_B' : [{ 'systemMode_B' : systemMode_B, 'outputLine_B' : str(outputLine_B), 'outputFreq_B' : str(outputFreq_B), 'outputVolt_B' : str(outputVolt_B), 'outputAmp_B' : str(outputAmp_B), 'outputWatt_B' : str(outputWatt_B/1000), 'outputPercent_B' : str(outputPercent_B)}], \
-		         'battery_A' : [{ 'status' : [{ 'batteryHealth_A' : batteryHealth_A, 'batteryStatus_A' : batteryStatus_A, 'batteryCharge_Mode_A' : batteryCharge_Mode_A, 'batteryRemain_Min_A' : batteryRemain_Min_A, 'batteryRemain_Sec_A' : batteryRemain_Sec_A, 'batteryVolt_A' : str(batteryVolt_A), 'batteryTemp_A' : str(batteryTemp_A), 'batteryRemain_Percent_A' : str(batteryRemain_Percent_A)}]}, \
-		         { 'lastBattery_Year_A' : str(lastBattery_Year_A), 'lastBattery_Mon_A' : str(lastBattery_Mon_A), 'lastBattery_Day_A' : str(lastBattery_Day_A)}, { 'nextBattery_Year_A' : str(nextBattery_Year_A), 'nextBattery_Mon_A' : str(nextBattery_Mon_A), 'nextBattery_Day_A' : str(nextBattery_Day_A)}], \
-		         'battery_B' : [{ 'status' : [{ 'batteryHealth_B' : batteryHealth_B, 'batteryStatus_B' : batteryStatus_B, 'batteryCharge_Mode_B' : batteryCharge_Mode_B, 'batteryRemain_Min_B' : batteryRemain_Min_B, 'batteryRemain_Sec_B' : batteryRemain_Sec_B, 'batteryVolt_B' : str(batteryVolt_B), 'batteryTemp_B' : str(batteryTemp_B), 'batteryRemain_Percent_B' : str(batteryRemain_Percent_B)}]}, \
-		         { 'lastBattery_Year_B' : str(lastBattery_Year_B), 'lastBattery_Mon_B' : str(lastBattery_Mon_B), 'lastBattery_Day_B' : str(lastBattery_Day_B)}, { 'nextBattery_Year_B' : str(nextBattery_Year_B), 'nextBattery_Mon_B' : str(nextBattery_Mon_B), 'nextBattery_Day_B' : str(nextBattery_Day_B)}]})
+		r = requests.post(distance, json=jsonData)
 		print('Post To OpenStack OK !')
 	except:
 		print('Post To OpenStack Error !')
 	print('-----------------------------------------')
-
+	try:
+		mqtt.publish('mytopic', jsonData)
+		print('MQTT To Server Error !')
+	except:
+		print('MQTT To Server Error !')
 class jsonReturn(Resource):
  	def get(self):
- 		global serialName_A, systemMode_A, UPS_Life_A
- 		global inputLine_A, inputFreq_A, inputVolt_A
- 		global outputLine_A, outputFreq_A, outputVolt_A, outputWatt_A, outputAmp_A, outputPercent_A
- 		global batteryHealth_A, batteryStatus_A, batteryCharge_Mode_A
- 		global batteryRemain_Min_A, batteryRemain_Sec_A, batteryVolt_A, batteryTemp_A, batteryRemain_Percent_A
- 		global lastBattery_Year_A, lastBattery_Mon_A, lastBattery_Day_A
- 		global nextBattery_Year_A, nextBattery_Mon_A, nextBattery_Day_A
- 		global serialName_B, systemMode_B, UPS_Life_B
- 		global inputLine_B, inputFreq_B, inputVolt_B
- 		global outputLine_B, outputFreq_B, outputVolt_B, outputWatt_B, outputAmp_B, outputPercent_B
- 		global batteryHealth_B, batteryStatus_B, batteryCharge_Mode_B
- 		global batteryRemain_Min_B, batteryRemain_Sec_B, batteryVolt_B, batteryTemp_B, batteryRemain_Percent_B
- 		global lastBattery_Year_B, lastBattery_Mon_B, lastBattery_Day_B
- 		global nextBattery_Year_B, nextBattery_Mon_B, nextBattery_Day_B
- 		return { 'connect_A' : serialName_A, 'connect_B' : serialName_B, 'ups_Life_A' : UPS_Life_A, 'ups_Life_B' : UPS_Life_B, \
- 		         'input_A' : [{ 'inputLine_A' : str(inputLine_A), 'inputFreq_A' : str(inputFreq_A), 'inputVolt_A' : str(inputVolt_A) }], \
- 		         'input_B' : [{ 'inputLine_B' : str(inputLine_B), 'inputFreq_B' : str(inputFreq_B), 'inputVolt_B' : str(inputVolt_B) }], \
- 		         'output_A' : [{ 'systemMode_A' : systemMode_A, 'outputLine_A' : str(outputLine_A), 'outputFreq_A' : str(outputFreq_A), 'outputVolt_A' : str(outputVolt_A), 'outputAmp_A' : str(outputAmp_A), 'outputWatt_A' : str(outputWatt_A/1000), 'outputPercent_A' : str(outputPercent_A)}], \
- 		         'output_B' : [{ 'systemMode_B' : systemMode_B, 'outputLine_B' : str(outputLine_B), 'outputFreq_B' : str(outputFreq_B), 'outputVolt_B' : str(outputVolt_B), 'outputAmp_B' : str(outputAmp_B), 'outputWatt_B' : str(outputWatt_B/1000), 'outputPercent_B' : str(outputPercent_B)}], \
- 		         'battery_A' : [{ 'status' : [{ 'batteryHealth_A' : batteryHealth_A, 'batteryStatus_A' : batteryStatus_A, 'batteryCharge_Mode_A' : batteryCharge_Mode_A, 'batteryRemain_Min_A' : batteryRemain_Min_A, 'batteryRemain_Sec_A' : batteryRemain_Sec_A, 'batteryVolt_A' : str(batteryVolt_A), 'batteryTemp_A' : str(batteryTemp_A), 'batteryRemain_Percent_A' : str(batteryRemain_Percent_A)}]}, \
- 		         { 'lastBattery_Year_A' : str(lastBattery_Year_A), 'lastBattery_Mon_A' : str(lastBattery_Mon_A), 'lastBattery_Day_A' : str(lastBattery_Day_A)}, { 'nextBattery_Year_A' : str(nextBattery_Year_A), 'nextBattery_Mon_A' : str(nextBattery_Mon_A), 'nextBattery_Day_A' : str(nextBattery_Day_A)}], \
- 		         'battery_B' : [{ 'status' : [{ 'batteryHealth_B' : batteryHealth_B, 'batteryStatus_B' : batteryStatus_B, 'batteryCharge_Mode_B' : batteryCharge_Mode_B, 'batteryRemain_Min_B' : batteryRemain_Min_B, 'batteryRemain_Sec_B' : batteryRemain_Sec_B, 'batteryVolt_B' : str(batteryVolt_B), 'batteryTemp_B' : str(batteryTemp_B), 'batteryRemain_Percent_B' : str(batteryRemain_Percent_B)}]}, \
- 		         { 'lastBattery_Year_B' : str(lastBattery_Year_B), 'lastBattery_Mon_B' : str(lastBattery_Mon_B), 'lastBattery_Day_B' : str(lastBattery_Day_B)}, { 'nextBattery_Year_B' : str(nextBattery_Year_B), 'nextBattery_Mon_B' : str(nextBattery_Mon_B), 'nextBattery_Day_B' : str(nextBattery_Day_B)}]}		
+ 		global jsonData
+ 		return json.loads(jsonData)		
 api.add_resource(jsonReturn, '/')
  
 @app.route('/show')
