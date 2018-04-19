@@ -14,8 +14,7 @@ from serial import SerialException
 requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)
-#app.config['MQTT_BROKER_URL'] = '10.20.0.90'
-app.config['MQTT_BROKER_URL'] = '127.0.0.1'
+app.config['MQTT_BROKER_URL'] = '10.20.0.90'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_REFRESH_TIME'] = 1.0 
 mqtt = Mqtt(app)
