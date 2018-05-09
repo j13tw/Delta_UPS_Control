@@ -23,7 +23,7 @@ if response == 0:						# check network sevice & server is on
 		r = requests.get(distance)
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
-		outputStatus = key['battery_B'][0]['status'][0]
+		outputStatus = key['battery_B']['status']
 		batteryCharge_Mode = outputStatus['batteryCharge_Mode_B']
 		if batteryCharge_Mode == 'Discharging (未充電)':
 			print ("Battery Charge Mode : "+ batteryCharge_Mode + "(Please checked the Power Plug-in !)")

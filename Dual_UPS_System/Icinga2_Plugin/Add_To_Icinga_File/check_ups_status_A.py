@@ -25,7 +25,7 @@ if response == 0:						# check network sevice & server is on
 		r = requests.get(distance)
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
-		outputStatus = key['output_A'][0]
+		outputStatus = key['output_A']
 		systemMode = outputStatus['systemMode_A']
 		if systemMode == "Normal":
 			print ("System Status : "+ systemMode + " (AC plug-in)")

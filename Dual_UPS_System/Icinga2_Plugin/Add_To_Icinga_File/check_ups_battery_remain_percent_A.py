@@ -25,7 +25,7 @@ if response == 0:						# check network sevice & server is on
 		r = requests.get(distance)
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
-		outputStatus = key['battery_A'][0]['status'][0]
+		outputStatus = key['battery_A']['status']
 		batteryRemain_Percent = outputStatus['batteryRemain_Percent_A']
 		if(int(batteryRemain_Percent)) >= 30:
 			print ("Battery Remain Percent : "+ batteryRemain_Percent + " %| Battery Level=" + batteryRemain_Percent + "%;50;30")

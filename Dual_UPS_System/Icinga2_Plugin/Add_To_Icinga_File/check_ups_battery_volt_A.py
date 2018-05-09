@@ -23,7 +23,7 @@ if response == 0:						# check network sevice & server is on
 		r = requests.get(distance)
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
-		outputStatus = key['battery_A'][0]['status'][0]
+		outputStatus = key['battery_A']['status']
 		batteryVolt = outputStatus['batteryVolt_A']
 		print ("Battery Volt : "+ batteryVolt + " V")
 		sys.exit(0)

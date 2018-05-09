@@ -25,9 +25,9 @@ if response == 0:						# check network sevice & server is on
 		r = requests.get(distance)
 		value = r.content.decode('utf-8')	# get return json value
 		key = json.loads(value)
-		outputStatus = key['output_A'][0]
+		outputStatus = key['output_A']
 		outputWatt = outputStatus['outputWatt_A']
-		print ("System output Watt : "+ str(Decimal(outputWatt)/1000) + "KW")
+		print ("System output Watt : "+ outputWatt + "KW")
 		sys.exit(0)
 	else:
 	   	print ('http://' + hostname +':' + port + ' Service Port Found !')
