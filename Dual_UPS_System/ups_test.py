@@ -84,7 +84,7 @@ system_on = 0
 def checkUSB():
 	global ser_A, ser_B
 
-	for usb_id in range(0, 5):
+	for usb_id in range(1, 10):
 		try:
 			usb_info = usb_roots()[1][1][usb_id]
 		except:
@@ -98,6 +98,8 @@ def checkUSB():
 				print("UPS_B(window) -->" + device_B)
 			else:
 				print("USB ERROR !!!")
+		if (device_A != "" and device_B != ""):
+			break
 		
 	try:
 		ser_A = serial.Serial('/dev/' + device_A, 2400, timeout=1)
@@ -136,7 +138,7 @@ def connectDevice():
 	try:
 		ser_A.open()
 		UPS_Life_A = 'onLine(在線)'
-		serialName_A = ser_A.name + " (左)"
+		serialName_A = ser_A.name + " (牆壁)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
 		print('-----------------------------------------')
@@ -326,7 +328,7 @@ def connectDevice():
 	try:
 		ser_B.open()
 		UPS_Life_B = 'onLine(在線)'
-		serialName_B = ser_B.name + " (右)"
+		serialName_B = ser_B.name + " (窗戶)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 		print('-----------------------------------------')
