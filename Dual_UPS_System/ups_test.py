@@ -83,7 +83,8 @@ system_on = 0
 
 def checkUSB():
 	global ser_A, ser_B
-
+	device_A = ""
+	device_B = ""
 	for usb_id in range(1, 10):
 		try:
 			usb_info = usb_roots()[1][1][usb_id]
