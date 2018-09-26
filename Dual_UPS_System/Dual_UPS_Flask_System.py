@@ -10,11 +10,13 @@ from flask_restful import Resource, Api
 from flask import render_template
 from decimal import getcontext, Decimal
 from serial import SerialException
+# usbid version only for 1.0.3
+from usbid.device import usb_roots
 
 requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)
-app.config['MQTT_BROKER_URL'] = '10.20.0.90'
+app.config['MQTT_BROKER_URL'] = '10.20.0.19'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_REFRESH_TIME'] = 1.0 
 mqtt = Mqtt(app)
@@ -77,8 +79,42 @@ ser_B = serial.Serial()
 hostname = '10.20.0.76'
 port = '5000'
 jsonData = ''
+system_on = 0
+
+def checkUSB():
+	global ser_A, ser_B
+	device_A = ""
+	device_B = ""
+	for usb_id in range(1, 10):
+		try:
+			usb_info = usb_roots()[1][1][usb_id]
+		except:
+			usb_info = " "
+		if (usb_info != " "):
+			if (usb_info.idVendor == "067b" and usb_info.idProduct == "2303"):
+				device_A = usb_info.tty
+				print("UPS_B(wall) -->" + device_A)
+			elif (usb_info.idVendor == "1a86" and usb_info.idProduct == "7523"):
+				device_B = usb_info.tty
+				print("UPS_B(window) -->" + device_B)
+			else:
+				print("USB ERROR !!!")
+		if (device_A != "" and device_B != ""):
+			break
+		
+	try:
+		ser_A = serial.Serial('/dev/' + device_A, 2400, timeout=1)
+	except:
+		ser_A = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
+	ser_A.close()
+	try:
+		ser_B = serial.Serial('/dev/' + device_B, 2400, timeout=1)
+	except:
+		ser_B = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)
+	ser_B.close()
 
 def connectDevice():
+	global system_on
 	global ser_A, ser_B, hostname, port, jsonData
 	global serialName_A, systemMode_A, UPS_Life_A
 	global inputLine_A, inputFreq_A, inputVolt_A
@@ -96,10 +132,14 @@ def connectDevice():
 	global nextBattery_Year_B, nextBattery_Mon_B, nextBattery_Day_B
 	getcontext().prec = 6
 
+	if (system_on == 0):
+		checkUSB()
+		system_on = 1
+
 	try:
-		ser_A = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
+		ser_A.open()
 		UPS_Life_A = 'onLine(在線)'
-		serialName_A = ser_A.name + " (左)"
+		serialName_A = ser_A.name + " (牆壁)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
 		print('-----------------------------------------')
@@ -129,6 +169,7 @@ def connectDevice():
 		ser_A.close()
 	except:
 		print ("USB Port A Open Error !")
+		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
 		ser_A.close()
 	print('-----------------------------------------')
@@ -153,22 +194,14 @@ def connectDevice():
 	# 	print(countMode)
 		mode = int(countMode)
 		systemMode_A = ''
-		if mode == 0:
-	 		systemMode_A = 'Normal'
-		if mode == 1:
-		 	systemMode_A = 'Battery'
-		if mode == 2:
-	 		systemMode_A = 'Bypass(3phase Reserve Power Path)'
-		if mode == 3:
-		 	psystemMode_A = 'Reducing'
-		if mode == 4:
-	 		systemMode_A = 'Boosting'
-		if mode == 5:
-		 	systemMode_A = 'Manual Bypass'
-		if mode == 6:
-	 		systemMode_A = 'Other'
-		if mode == 7:
-	 		systemMode_A = 'No output'
+		if mode == 0: systemMode_A = 'Normal'
+		if mode == 1: systemMode_A = 'Battery'
+		if mode == 2: systemMode_A = 'Bypass(3phase Reserve Power Path)'
+		if mode == 3: psystemMode_A = 'Reducing'
+		if mode == 4: systemMode_A = 'Boosting'
+		if mode == 5: systemMode_A = 'Manual Bypass'
+		if mode == 6: systemMode_A = 'Other'
+		if mode == 7: systemMode_A = 'No output'
 		outputFreq_A = float(tmp[1])/10
 		outputLine_A = int(tmp[2])
 		outputVolt_A = float(tmp[3])/10
@@ -186,6 +219,7 @@ def connectDevice():
 		ser_A.close()
 	except:
 		print ("USB Port A Open Error !")
+		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
 		ser_A.close()
 	print('-----------------------------------------')
@@ -252,6 +286,7 @@ def connectDevice():
 		ser_A.close()
 	except:
 		print ("USB Port A Open Error !")
+		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
 		ser_A.close()
 	print('-----------------------------------------')
@@ -286,14 +321,15 @@ def connectDevice():
 		ser_A.close()             # close port
 	except:
 		print ("USB Port A Open Error !")
+		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
 		ser_A.close()             # close port
 	print('-----------------------------------------')
 
 	try:
-		ser_B = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)
+		ser_B.open()
 		UPS_Life_B = 'onLine(在線)'
-		serialName_B = ser_B.name + " (右)"
+		serialName_B = ser_B.name + " (窗戶)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
 		print('-----------------------------------------')
@@ -323,6 +359,7 @@ def connectDevice():
 		ser_B.close()
 	except:
 		print ("USB Port B Open Error !")
+		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
 		ser_B.close()
 	print('-----------------------------------------')
@@ -380,6 +417,7 @@ def connectDevice():
 		ser_B.close()
 	except:
 		print ("USB Port B Open Error !")
+		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
 		ser_B.close()
 	print('-----------------------------------------')
@@ -446,6 +484,7 @@ def connectDevice():
 		ser_B.close()
 	except:
 		print ("USB Port B Open Error !")
+		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
 		ser_B.close()
 	print('-----------------------------------------')
@@ -480,6 +519,7 @@ def connectDevice():
 		ser_B.close()             # close port
 	except:
 		print ("USB Port B Open Error !")
+		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
 		ser_B.close()             # close port
 	print('-----------------------------------------')

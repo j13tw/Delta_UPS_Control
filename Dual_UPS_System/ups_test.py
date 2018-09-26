@@ -91,10 +91,10 @@ def checkUSB():
 		except:
 			usb_info = " "
 		if (usb_info != " "):
-			if (usb_info.idVendor == "1a86" and usb_info.idProduct == "7523"):
+			if (usb_info.idVendor == "067b" and usb_info.idProduct == "2303"):
 				device_A = usb_info.tty
-				print("UPS_A(wall) -->" + device_A)
-			elif (usb_info.idVendor == "067b" and usb_info.idProduct == "2303"):
+				print("UPS_B(wall) -->" + device_A)
+			elif (usb_info.idVendor == "1a86" and usb_info.idProduct == "7523"):
 				device_B = usb_info.tty
 				print("UPS_B(window) -->" + device_B)
 			else:
