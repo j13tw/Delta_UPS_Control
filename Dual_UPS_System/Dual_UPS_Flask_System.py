@@ -101,16 +101,15 @@ def checkUSB():
 				print("USB ERROR !!!")
 		if (device_A != "" and device_B != ""):
 			break
-		
 	try:
 		ser_A = serial.Serial('/dev/' + device_A, 2400, timeout=1)
 	except:
-		ser_A = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
+		ser_A = serial.Serial()
 	ser_A.close()
 	try:
 		ser_B = serial.Serial('/dev/' + device_B, 2400, timeout=1)
 	except:
-		ser_B = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)
+		ser_B = serial.Serial()
 	ser_B.close()
 
 def connectDevice():
