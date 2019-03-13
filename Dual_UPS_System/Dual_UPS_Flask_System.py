@@ -140,18 +140,18 @@ def connectDevice():
 		UPS_Life_A = 'onLine(在線)'
 		serialName_A = ser_A.name + " (牆壁)"
 		print('-----------------------------------------')
-		print('USB 連接位置 : ' + serialName_A)             	# check which port was really used
+		print('USB 連接位置 : ' + serialName_A)             	 # check which port was really used
 		print('-----------------------------------------')
 	#	--> STI 輸入資料
 		ser_A.write(b'~00P000STI')                       		# write a UPS RS232 format string
-	#	ser_A.write(b'~00D0101;600;2190')   			# Return data format 1 Test
+	#	ser_A.write(b'~00D0101;600;2190')   					# Return data format 1 Test
 	#	ser_A.write(bytes('~00D0101;600;2190', 'UTF-8'))		# Return data format 2 Test
-		s = ser_A.read(30)        							# read up to return data 30 bytes (timeout)
+		s = ser_A.read(30)        								# read up to return data 30 bytes (timeout)
 	#	print(s)
 		countLine = ''
-		s = s.decode('ascii')								# decode UPS return string format
+		s = s.decode('ascii')									# decode UPS return string format
 	# 	print(s)
-		tmp = str(s).split(';')								# split data by ';' on data format
+		tmp = str(s).split(';')									# split data by ';' on data format
 	#	print (tmp)
 		i = 0
 		for j in tmp[0]:
