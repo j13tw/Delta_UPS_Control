@@ -116,7 +116,7 @@ def connectDevice():
 		serialName_A = ser_A.name + " (牆壁)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_A)             	 # check which port was really used
-		print('-----------------------------------------')
+	#	print('-----------------------------------------')
 	#	--> STI 輸入資料
 		ser_A.write(b'~00P000STI')                       		# write a UPS RS232 format string
 	#	ser_A.write(b'~00D0101;600;2190')   					# Return data format 1 Test
@@ -153,9 +153,9 @@ def connectDevice():
 		s = ser_A.read(30)
 		countMode = ''
 		s = s.decode('ascii')
-		print(s)
+	#	print(s)
 		tmp = str(s).split(';')
-		print (tmp)
+	#	print (tmp)
 		i = 0
 		for j in tmp[0]:
 			if  i >= 7:
@@ -294,7 +294,7 @@ def connectDevice():
 		serialName_B = ser_B.name + " (窗戶)"
 		print('-----------------------------------------')
 		print('USB 連接位置 : ' + serialName_B)             	# check which port was really used
-		print('-----------------------------------------')
+	#	print('-----------------------------------------')
 	#	--> STI 輸入資料
 		ser_B.write(b'~00P000STI')                       		# write a UPS RS232 format string
 	#	ser_B.write(b'~00D0101;600;2190')   			# Return data format 1 Test
