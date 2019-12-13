@@ -10,8 +10,7 @@ from flask_restful import Resource, Api
 from flask import render_template
 from decimal import getcontext, Decimal
 from serial import SerialException
-# usbid version only for 1.0.3
-from usbid.device import usb_roots
+
 
 requests.packages.urllib3.disable_warnings()
 
@@ -83,34 +82,10 @@ system_on = 0
 
 def checkUSB():
 	global ser_A, ser_B
-	device_A = ""
-	device_B = ""
-	for usb_id in range(1, 10):
-		try:
-			usb_info = usb_roots()[1][1][usb_id]
-		except:
-			usb_info = " "
-		if (usb_info != " "):
-			if (usb_info.idVendor == "067b" and usb_info.idProduct == "2303"):
-				device_A = usb_info.tty
-				print("UPS_B(wall) -->" + device_A)
-			elif (usb_info.idVendor == "1a86" and usb_info.idProduct == "7523"):
-				device_B = usb_info.tty
-				print("UPS_B(window) -->" + device_B)
-			else:
-				print("USB ERROR !!!")
-		if (device_A != "" and device_B != ""):
-			break
-	try:
-		ser_A = serial.Serial('/dev/' + device_A, 2400, timeout=1)
-	except:
-		ser_A = serial.Serial()
-	ser_A.close()
-	try:
-		ser_B = serial.Serial('/dev/' + device_B, 2400, timeout=1)
-	except:
-		ser_B = serial.Serial()
-	ser_B.close()
+	device_A = "ttyUSB0"
+	device_B = "ttyUSB1"
+	ser_A = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
+	ser_B = serial.Serial('/dev/ttyUSB1', 2400, timeout=1)
 
 def connectDevice():
 	global system_on
@@ -135,8 +110,8 @@ def connectDevice():
 		checkUSB()
 		system_on = 1
 
+	time.sleep(2)
 	try:
-		ser_A.open()
 		UPS_Life_A = 'onLine(在線)'
 		serialName_A = ser_A.name + " (牆壁)"
 		print('-----------------------------------------')
@@ -162,18 +137,15 @@ def connectDevice():
 		inputLine_A = int(countLine)
 		inputFreq_A = float(tmp[1])/10
 		inputVolt_A = float(tmp[2])/10
-		print ('輸入線路 : ' + str(inputLine_A) + ' 號線路')
-		print ('輸入頻率 : ' + str(inputFreq_A) + ' Hz')
-		print ('輸入電壓 : ' + str(inputVolt_A) + ' V')
-		ser_A.close()
+		# print ('輸入線路 : ' + str(inputLine_A) + ' 號線路')
+		# print ('輸入頻率 : ' + str(inputFreq_A) + ' Hz')
+		# print ('輸入電壓 : ' + str(inputVolt_A) + ' V')
 	except:
 		print ("USB Port A Open Error !")
-		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
-		ser_A.close()
 	print('-----------------------------------------')
 	try:
-		ser_A.open()
+		time.sleep(2)
 		UPS_Life_A = 'onLine(在線)'
 	#	--> STO
 		ser_A.write(b'~00P000STO')
@@ -181,16 +153,16 @@ def connectDevice():
 		s = ser_A.read(30)
 		countMode = ''
 		s = s.decode('ascii')
-	# 	print(s)
+		print(s)
 		tmp = str(s).split(';')
-	# 	print (tmp)
+		print (tmp)
 		i = 0
 		for j in tmp[0]:
 			if  i >= 7:
 				countMode += str(j) 
 			i = i + 1
 		i = 0
-	# 	print(countMode)
+		print(countMode)
 		mode = int(countMode)
 		systemMode_A = ''
 		if mode == 0: systemMode_A = 'Normal'
@@ -208,22 +180,19 @@ def connectDevice():
 		outputAmp_A = float(outputWatt_A/outputVolt_A)
 		outputAmp_A = Decimal(outputAmp_A)*1
 		outputPercent_A = int(tmp[6])
-		print ('輸出狀態 : '+ systemMode_A)
-		print ('輸出線路 : ' + str(outputLine_A) + ' 號線路')
-		print ('輸出頻率 : ' + str(outputFreq_A) + ' Hz')
-		print ('輸出電壓 : %3.1f V' %outputVolt_A)
-		print ('輸出電流 : %3.3f A' %outputAmp_A)
-		print ('輸出瓦特 : ' + str(outputWatt_A/1000) + ' KW')
-		print ('輸出負載比 : ' + str(outputPercent_A) + ' %')
-		ser_A.close()
+		# print ('輸出狀態 : '+ systemMode_A)
+		# print ('輸出線路 : ' + str(outputLine_A) + ' 號線路')
+		# print ('輸出頻率 : ' + str(outputFreq_A) + ' Hz')
+		# print ('輸出電壓 : %3.1f V' %outputVolt_A)
+		# print ('輸出電流 : %3.3f A' %outputAmp_A)
+		# print ('輸出瓦特 : ' + str(outputWatt_A/1000) + ' KW')
+		# print ('輸出負載比 : ' + str(outputPercent_A) + ' %')
 	except:
 		print ("USB Port A Open Error !")
-		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
-		ser_A.close()
 	print('-----------------------------------------')
 	try:
-		ser_A.open()
+		time.sleep(2)
 		UPS_Life_A = 'onLine(在線)'
 	#	--> STB 輸入資料
 		ser_A.write(b'~00P000STB')
@@ -274,23 +243,20 @@ def connectDevice():
 		batteryVolt_A = Decimal(batteryVolt_A)*1
 		batteryTemp_A = int(tmp[8])
 		batteryRemain_Percent_A = int(tmp[9])
-		print ('電池健康度 : ' + batteryHealth_A)
-		print ('電池狀態 : ' + batteryStatus_A)
-		print ('充電模式 : ' + batteryCharge_Mode_A)
-		print ('電池電壓 : %3.1f V' %batteryVolt_A)
-		print ('輸出剩餘時間(分) : ' + batteryRemain_Min_A)
-		print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec_A)
-		print ('電量剩餘百分比 : ' + str(batteryRemain_Percent_A) + ' %')
-		print ('UPS 內部溫度 : ' + str(batteryTemp_A) + ' °C')
-		ser_A.close()
+		# print ('電池健康度 : ' + batteryHealth_A)
+		# print ('電池狀態 : ' + batteryStatus_A)
+		# print ('充電模式 : ' + batteryCharge_Mode_A)
+		# print ('電池電壓 : %3.1f V' %batteryVolt_A)
+		# print ('輸出剩餘時間(分) : ' + batteryRemain_Min_A)
+		# print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec_A)
+		# print ('電量剩餘百分比 : ' + str(batteryRemain_Percent_A) + ' %')
+		# print ('UPS 內部溫度 : ' + str(batteryTemp_A) + ' °C')
 	except:
 		print ("USB Port A Open Error !")
-		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
-		ser_A.close()
 	print('-----------------------------------------')
 	try:
-		ser_A.open()
+		time.sleep(2)
 		UPS_Life_A = 'onLine(在線)'	
 	# 	--> BRD
 		ser_A.write(b'~00P000BRD')
@@ -315,18 +281,15 @@ def connectDevice():
 		nextBattery_Year_A = int(nextDate/10000)
 		nextBattery_Mon_A = int(nextDate/100) - nextBattery_Year_A*100
 		nextBattery_Day_A = nextDate - nextBattery_Mon_A*100 - nextBattery_Year_A*10000
-		print ('電池更換時間 : ' + str(lastBattery_Year_A) + ' 年 ' + str(lastBattery_Mon_A) + ' 月 ' + str(lastBattery_Day_A) + ' 日')
-		print ('下次更換時間 : ' + str(nextBattery_Year_A) + ' 年 ' + str(nextBattery_Mon_A) + ' 月 ' + str(nextBattery_Day_A) + ' 日')
-		ser_A.close()             # close port
+		# print ('電池更換時間 : ' + str(lastBattery_Year_A) + ' 年 ' + str(lastBattery_Mon_A) + ' 月 ' + str(lastBattery_Day_A) + ' 日')
+		# print ('下次更換時間 : ' + str(nextBattery_Year_A) + ' 年 ' + str(nextBattery_Mon_A) + ' 月 ' + str(nextBattery_Day_A) + ' 日')
 	except:
 		print ("USB Port A Open Error !")
-		checkUSB()
 		UPS_Life_A = 'offLine(離線)'
-		ser_A.close()             # close port
 	print('-----------------------------------------')
 
+	time.sleep(2)
 	try:
-		ser_B.open()
 		UPS_Life_B = 'onLine(在線)'
 		serialName_B = ser_B.name + " (窗戶)"
 		print('-----------------------------------------')
@@ -352,18 +315,15 @@ def connectDevice():
 		inputLine_B = int(countLine)
 		inputFreq_B = float(tmp[1])/10
 		inputVolt_B = float(tmp[2])/10
-		print ('輸入線路 : ' + str(inputLine_B) + ' 號線路')
-		print ('輸入頻率 : ' + str(inputFreq_B) + ' Hz')
-		print ('輸入電壓 : ' + str(inputVolt_B) + ' V')
-		ser_B.close()
+		# print ('輸入線路 : ' + str(inputLine_B) + ' 號線路')
+		# print ('輸入頻率 : ' + str(inputFreq_B) + ' Hz')
+		# print ('輸入電壓 : ' + str(inputVolt_B) + ' V')
 	except:
 		print ("USB Port B Open Error !")
-		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
-		ser_B.close()
 	print('-----------------------------------------')
 	try:
-		ser_B.open()
+		time.sleep(2)
 		UPS_Life_B = 'onLine(在線)'
 	#	--> STO
 		ser_B.write(b'~00P000STO')
@@ -406,22 +366,19 @@ def connectDevice():
 		outputAmp_B = float(outputWatt_B/outputVolt_B)
 		outputAmp_B = Decimal(outputAmp_B)*1
 		outputPercent_B = int(tmp[6])
-		print ('輸出狀態 : '+ systemMode_B)
-		print ('輸出線路 : ' + str(outputLine_B) + ' 號線路')
-		print ('輸出頻率 : ' + str(outputFreq_B) + ' Hz')
-		print ('輸出電壓 : %3.1f V' %outputVolt_B)
-		print ('輸出電流 : %3.3f A' %outputAmp_B)
-		print ('輸出瓦特 : ' + str(outputWatt_B/1000) + ' KW')
-		print ('輸出負載比 : ' + str(outputPercent_B) + ' %')
-		ser_B.close()
+		# print ('輸出狀態 : '+ systemMode_B)
+		# print ('輸出線路 : ' + str(outputLine_B) + ' 號線路')
+		# print ('輸出頻率 : ' + str(outputFreq_B) + ' Hz')
+		# print ('輸出電壓 : %3.1f V' %outputVolt_B)
+		# print ('輸出電流 : %3.3f A' %outputAmp_B)
+		# print ('輸出瓦特 : ' + str(outputWatt_B/1000) + ' KW')
+		# print ('輸出負載比 : ' + str(outputPercent_B) + ' %')
 	except:
 		print ("USB Port B Open Error !")
-		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
-		ser_B.close()
 	print('-----------------------------------------')
 	try:
-		ser_B.open()
+		time.sleep(2)
 		UPS_Life_B = 'onLine(在線)'
 	#	--> STB 輸入資料
 		ser_B.write(b'~00P000STB')
@@ -472,23 +429,20 @@ def connectDevice():
 		batteryVolt_B = Decimal(batteryVolt_B)*1
 		batteryTemp_B = int(tmp[8])
 		batteryRemain_Percent_B = int(tmp[9])
-		print ('電池健康度 : ' + batteryHealth_B)
-		print ('電池狀態 : ' + batteryStatus_B)
-		print ('充電模式 : ' + batteryCharge_Mode_B)
-		print ('電池電壓 : %3.1f V' %batteryVolt_B)
-		print ('輸出剩餘時間(分) : ' + batteryRemain_Min_B)
-		print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec_B)
-		print ('電量剩餘百分比 : ' + str(batteryRemain_Percent_B) + ' %')
-		print ('UPS 內部溫度 : ' + str(batteryTemp_B) + ' °C')
-		ser_B.close()
+		# print ('電池健康度 : ' + batteryHealth_B)
+		# print ('電池狀態 : ' + batteryStatus_B)
+		# print ('充電模式 : ' + batteryCharge_Mode_B)
+		# print ('電池電壓 : %3.1f V' %batteryVolt_B)
+		# print ('輸出剩餘時間(分) : ' + batteryRemain_Min_B)
+		# print ('輸出剩餘時間(秒) : ' + batteryRemain_Sec_B)
+		# print ('電量剩餘百分比 : ' + str(batteryRemain_Percent_B) + ' %')
+		# print ('UPS 內部溫度 : ' + str(batteryTemp_B) + ' °C')
 	except:
 		print ("USB Port B Open Error !")
-		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
-		ser_B.close()
 	print('-----------------------------------------')
 	try:
-		ser_B.open()
+		time.sleep(2)
 		UPS_Life_B = 'onLine(在線)'	
 	# 	--> BRD
 		ser_B.write(b'~00P000BRD')
@@ -513,26 +467,16 @@ def connectDevice():
 		nextBattery_Year_B = int(nextDate/10000)
 		nextBattery_Mon_B = int(nextDate/100) - nextBattery_Year_B*100
 		nextBattery_Day_B = nextDate - nextBattery_Mon_B*100 - nextBattery_Year_B*10000
-		print ('電池更換時間 : ' + str(lastBattery_Year_B) + ' 年 ' + str(lastBattery_Mon_B) + ' 月 ' + str(lastBattery_Day_B) + ' 日')
-		print ('下次更換時間 : ' + str(nextBattery_Year_B) + ' 年 ' + str(nextBattery_Mon_B) + ' 月 ' + str(nextBattery_Day_B) + ' 日')
-		ser_B.close()             # close port
+		# print ('電池更換時間 : ' + str(lastBattery_Year_B) + ' 年 ' + str(lastBattery_Mon_B) + ' 月 ' + str(lastBattery_Day_B) + ' 日')
+		# print ('下次更換時間 : ' + str(nextBattery_Year_B) + ' 年 ' + str(nextBattery_Mon_B) + ' 月 ' + str(nextBattery_Day_B) + ' 日')
 	except:
 		print ("USB Port B Open Error !")
-		checkUSB()
 		UPS_Life_B = 'offLine(離線)'
-		ser_B.close()             # close port
 	print('-----------------------------------------')
 
 #	jsonData = '{ "connect_A" : "' + serialName_A + '", "connect_B" : "' + serialName_B + '", "ups_Life_A" : "' + UPS_Life_A + '", "ups_Life_B" : "' + UPS_Life_B + '" ,"input_A" : [{ "inputLine_A" : "' + str(inputLine_A) + '", "inputFreq_A" : "' + str(inputFreq_A) + '", "inputVolt_A" : "' + str(inputVolt_A) + '"}], "input_B" : [{ "inputLine_B" : "' + str(inputLine_B) + '", "inputFreq_B" : "' + str(inputFreq_B) + '", "inputVolt_B" : "' + str(inputVolt_B) + '"}], "output_A" : [{ "systemMode_A" : "' + systemMode_A + '", "outputLine_A" : "' + str(outputLine_A) + '", "outputFreq_A" : "' + str(outputFreq_A) + '", "outputVolt_A" : "' + str(outputVolt_A) + '", "outputAmp_A" : "' + str(outputAmp_A) + '", "outputWatt_A" : "' + str(outputWatt_A/1000) + '", "outputPercent_A" : "' + str(outputPercent_A) + '"}], "output_B" : [{ "systemMode_B" : "' + systemMode_B + '", "outputLine_B" : "' + str(outputLine_B) + '", "outputFreq_B" : "' + str(outputFreq_B) + '", "outputVolt_B" : "' + str(outputVolt_B) + '", "outputAmp_B" : "' + str(outputAmp_B) + '", "outputWatt_B" : "' + str(outputWatt_B/1000) + '", "outputPercent_B" : "' + str(outputPercent_B) + '"}], "battery_A" : [{ "status" : [{ "batteryHealth_A" : "' + batteryHealth_A + '", "batteryStatus_A" : "' + batteryStatus_A + '", "batteryCharge_Mode_A" : "' + batteryCharge_Mode_A + '", "batteryRemain_Min_A" : "' + batteryRemain_Min_A + '", "batteryRemain_Sec_A" : "' + batteryRemain_Sec_A + '", "batteryVolt_A" : "' + str(batteryVolt_A) + '", "batteryTemp_A" : "' + str(batteryTemp_A) + '", "batteryRemain_Percent_A" : "' + str(batteryRemain_Percent_A) + '"}]}, { "lastBattery_Year_A" : "' + str(lastBattery_Year_A) + '", "lastBattery_Mon_A" : "' + str(lastBattery_Mon_A) + '", "lastBattery_Day_A" : "' + str(lastBattery_Day_A) + '"}, { "nextBattery_Year_A" : "' + str(nextBattery_Year_A) + '", "nextBattery_Mon_A" : "' + str(nextBattery_Mon_A) + '", "nextBattery_Day_A" : "' + str(nextBattery_Day_A) + '"}], "battery_B" : [{ "status" : [{ "batteryHealth_B" : "' + batteryHealth_B + '", "batteryStatus_B" : "' + batteryStatus_B + '", "batteryCharge_Mode_B" : "' + batteryCharge_Mode_B + '", "batteryRemain_Min_B" : "' + batteryRemain_Min_B + '", "batteryRemain_Sec_B" : "' + batteryRemain_Sec_B + '", "batteryVolt_B" : "' + str(batteryVolt_B) + '", "batteryTemp_B" : "' + str(batteryTemp_B) + '", "batteryRemain_Percent_B" : "' + str(batteryRemain_Percent_B) + '"}]}, { "lastBattery_Year_B" : "' + str(lastBattery_Year_B) + '", "lastBattery_Mon_B" : "' + str(lastBattery_Mon_B) + '", "lastBattery_Day_B" : "' + str(lastBattery_Day_B) + '"}, { "nextBattery_Year_B" : "' + str(nextBattery_Year_B) + '", "nextBattery_Mon_B" : "' + str(nextBattery_Mon_B) + '", "nextBattery_Day_B" : "' + str(nextBattery_Day_B) + '"}]}'
 	jsonData = '{ "connect_A" : "' + serialName_A + '", "connect_B" : "' + serialName_B + '", "ups_Life_A" : "' + UPS_Life_A + '", "ups_Life_B" : "' + UPS_Life_B + '" ,"input_A" : { "inputLine_A" : "' + str(inputLine_A) + '", "inputFreq_A" : "' + str(inputFreq_A) + '", "inputVolt_A" : "' + str(inputVolt_A) + '"}, "input_B" : { "inputLine_B" : "' + str(inputLine_B) + '", "inputFreq_B" : "' + str(inputFreq_B) + '", "inputVolt_B" : "' + str(inputVolt_B) + '"}, "output_A" : { "systemMode_A" : "' + systemMode_A + '", "outputLine_A" : "' + str(outputLine_A) + '", "outputFreq_A" : "' + str(outputFreq_A) + '", "outputVolt_A" : "' + str(outputVolt_A) + '", "outputAmp_A" : "' + str(outputAmp_A) + '", "outputWatt_A" : "' + str(outputWatt_A/1000) + '", "outputPercent_A" : "' + str(outputPercent_A) + '"}, "output_B" : { "systemMode_B" : "' + systemMode_B + '", "outputLine_B" : "' + str(outputLine_B) + '", "outputFreq_B" : "' + str(outputFreq_B) + '", "outputVolt_B" : "' + str(outputVolt_B) + '", "outputAmp_B" : "' + str(outputAmp_B) + '", "outputWatt_B" : "' + str(outputWatt_B/1000) + '", "outputPercent_B" : "' + str(outputPercent_B) + '"}, "battery_A" : { "status" : { "batteryHealth_A" : "' + batteryHealth_A + '", "batteryStatus_A" : "' + batteryStatus_A + '", "batteryCharge_Mode_A" : "' + batteryCharge_Mode_A + '", "batteryRemain_Min_A" : "' + batteryRemain_Min_A + '", "batteryRemain_Sec_A" : "' + batteryRemain_Sec_A + '", "batteryVolt_A" : "' + str(batteryVolt_A) + '", "batteryTemp_A" : "' + str(batteryTemp_A) + '", "batteryRemain_Percent_A" : "' + str(batteryRemain_Percent_A) + '"}, "lastChange" : { "lastBattery_Year_A" : "' + str(lastBattery_Year_A) + '", "lastBattery_Mon_A" : "' + str(lastBattery_Mon_A) + '", "lastBattery_Day_A" : "' + str(lastBattery_Day_A) + '"}, "nextChange" : { "nextBattery_Year_A" : "' + str(nextBattery_Year_A) + '", "nextBattery_Mon_A" : "' + str(nextBattery_Mon_A) + '", "nextBattery_Day_A" : "' + str(nextBattery_Day_A) + '"}}, "battery_B" : { "status" : { "batteryHealth_B" : "' + batteryHealth_B + '", "batteryStatus_B" : "' + batteryStatus_B + '", "batteryCharge_Mode_B" : "' + batteryCharge_Mode_B + '", "batteryRemain_Min_B" : "' + batteryRemain_Min_B + '", "batteryRemain_Sec_B" : "' + batteryRemain_Sec_B + '", "batteryVolt_B" : "' + str(batteryVolt_B) + '", "batteryTemp_B" : "' + str(batteryTemp_B) + '", "batteryRemain_Percent_B" : "' + str(batteryRemain_Percent_B) + '"}, "lastChange" : { "lastBattery_Year_B" : "' + str(lastBattery_Year_B) + '", "lastBattery_Mon_B" : "' + str(lastBattery_Mon_B) + '", "lastBattery_Day_B" : "' + str(lastBattery_Day_B) + '"}, "nextChange" : { "nextBattery_Year_B" : "' + str(nextBattery_Year_B) + '", "nextBattery_Mon_B" : "' + str(nextBattery_Mon_B) + '", "nextBattery_Day_B" : "' + str(nextBattery_Day_B) + '"}}}'
 #	print (jsonData)		#check json
-	try:
-		distance = 'http://' + hostname + ':' + port + '/'
-		r = requests.post(distance, json=jsonData)
-		print('Post To OpenStack OK !')
-	except:
-		print('Post To OpenStack Error !')
-	print('-----------------------------------------')
 	try:
 		mqtt.publish('UPS_Monitor', jsonData)
 		print('MQTT To Server OK !')
