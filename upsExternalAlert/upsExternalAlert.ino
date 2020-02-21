@@ -35,9 +35,6 @@ char server[] = "smart-factory-robot.herokuapp.com";   // http://download.labs.m
 // that you want to connect to (port 80 is default for HTTP):
 WiFiClient client;
 
-int upsAlert = 0;
-
-int userTest = 0;
 int upsStatus = 0;
 int upsPower = 0;
 int upsBackend = 0;
@@ -51,11 +48,11 @@ int upsPreBroken = 0;
 int upsPreSupply = 0;
 
 int userTestPin = 6;
-int upsPin8Pin = 10;
+int upsPin8Pin = 17;
 int upsPin1Pin = 11;
-int upsPin6Pin = 12;
+int upsPin6Pin = 15;
 int upsPin5Pin = 13;
-int upsPin2Pin = 16;
+int upsPin2Pin = 12;
 
 String buildJson(int statusCount) {
   String upsStatusString = "";
@@ -75,15 +72,15 @@ String buildJson(int statusCount) {
   else upsSupplyString = "轉換";
   String data = "{\"message\":\"能源異常回覆系統";
   if (statusCount == 1) data += "(每月測試)";
-  data += "\nUPS設備位置:UPS_A(牆壁)\n運轉狀態: ";
+  data += "\\nUPS設備位置:UPS_A(牆壁)\\n運轉狀態: ";
   data += upsStatusString;
-  data += "\n供電狀況: ";
+  data += "\\n供電狀況: ";
   data += upsPowerString;
-  data += "\n備載狀態: ";
+  data += "\\n備載狀態: ";
   data += upsBackendString;
-  data += "\n故障狀態: ";
+  data += "\\n故障狀態: ";
   data += upsBrokenString;
-  data += "\n電源淨化: ";
+  data += "\\n電源淨化: ";
   data += upsSupplyString;
   data += "\"}";
   return data;
@@ -95,20 +92,22 @@ void userTestAlert(){
 
 void postAlert(int statusCount){
   String PostData = buildJson(statusCount);
-  Serial.print(PostData);
+  Serial.println(PostData);
+  client.stop();
   // if you get a connection, report back via serial:
-    if (client.connect(server, 443)) {
-        Serial.println("connected to server (POST)");
-        // Make a HTTP request:
-        client.println("POST /message HTTP/1.1");
-        client.println("Host: smart-factory-robot.herokuapp.com");
-        client.println("Content-Type: application/json");
-        client.println("Connection: close");
-        client.print("Content-Length: ");
-        client.println(PostData.length());
-        client.println();
-        client.println(PostData);  //send the HTTP POST body
-        delay(10);
+  if (client.connect(server, 80)) {
+      Serial.println("connected to server (POST)");
+      // Make a HTTP request:
+      client.println("POST /message HTTP/1.1");
+      client.println("Host: smart-factory-robot.herokuapp.com");
+      client.println("Accept: */*");
+      client.println("Content-Type: application/json");
+      client.println("Connection: close");
+      client.print("Content-Length: ");
+      client.println(PostData.length());
+      client.println();
+      client.println(PostData);  //send the HTTP POST body
+      delay(1000);
     }
     
     // if there are incoming bytes available
@@ -129,9 +128,6 @@ void postAlert(int statusCount){
 void setup() {
     //Initialize serial and wait for port to open:
     Serial.begin(9600);
-    while (!Serial) {
-        ; // wait for serial port to connect. Needed for native USB port only
-    }
 
     // attempt to connect to Wifi network:
     while (status != WL_CONNECTED) {
@@ -143,7 +139,6 @@ void setup() {
     Serial.println("Connected to wifi");
     printWifiStatus();
 
-    pinMode(userTestPin, INPUT);
     pinMode(upsPin1Pin, INPUT);
     pinMode(upsPin2Pin, INPUT);
     pinMode(upsPin5Pin, INPUT);
@@ -153,7 +148,7 @@ void setup() {
 }
 
 void loop() {
-    upsAlert = 0;
+    int upsAlert = 0;
 
     int upsPin1 = 0;
     int upsPin2 = 0;
@@ -161,7 +156,6 @@ void loop() {
     int upsPin6 = 0;
     int upsPin8 = 0;
     
-    userTest = digitalRead(userTestPin);
     upsPin1 = digitalRead(upsPin1Pin);
     upsPin2 = digitalRead(upsPin2Pin);
     upsPin5 = digitalRead(upsPin5Pin);
@@ -185,6 +179,14 @@ void loop() {
     else upsBroken = 0;
     if (upsPin5 == 1 && upsPin2 == 0) upsSupply = 0;
     if (upsPin5 == 0 && upsPin2 == 1) upsSupply = 1;
+
+    
+    Serial.print(upsStatus);
+    Serial.print(upsPower);
+    Serial.print(upsBackend);
+    Serial.print(upsBroken);
+    Serial.print(upsSupply);
+    Serial.println("\n");
     
     if (upsStatus != upsPreStatus) upsAlert |= 1;
     if (upsPower != upsPrePower) upsAlert |= 1;
@@ -217,7 +219,7 @@ void loop() {
 //    Serial.print(upsPreSupply);
 //    Serial.print(upsSupply);
     Serial.println("\nWait for Scan Status Loop");
-    delay(15000);
+    delay(5000);
     
 }
 
