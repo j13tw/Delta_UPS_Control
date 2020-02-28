@@ -101,7 +101,7 @@ while(True):
             outputLine = int(tmp[2])
             outputVolt = float(tmp[3])/10
             outputWatt = round(int(tmp[5])/1000, 3)
-            outputAmp = round(float(outputWatt/outputVolt), 3)
+            outputAmp = round(float(outputWatt*1000/outputVolt), 3)
             outputPercent = int(tmp[6])
             print ("輸出狀態 : "+ outputMode)
             print ("輸出線路 : " + str(outputLine) + " 相線路")
@@ -233,9 +233,10 @@ while(True):
             sendData["output"]["mode"] = outputMode
             sendData["output"]["line"] = outputLine
             sendData["output"]["freq"] = outputFreq
+            sendData["output"]["volt"] = outputVolt
             sendData["output"]["amp"] = outputAmp
             sendData["output"]["percent"] = outputPercent
-            sendData["output"]["watt"] =outputWatt
+            sendData["output"]["watt"] = outputWatt
             sendData["battery"]["status"]["health"] = batteryHealth
             sendData["battery"]["status"]["status"] = batteryStatus
             sendData["battery"]["status"]["chargeMode"] = batteryChargeMode
