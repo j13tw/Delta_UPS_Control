@@ -5,8 +5,13 @@ import paho.mqtt.client as mqtt
 broker_ip = "10.20.0.19"
 broker_port = 1883
 
-client = mqtt.Client()
-client.connect(broker_ip, broker_port)
+while(True):
+    try:
+        client = mqtt.Client()
+        client.connect(broker_ip, broker_port)
+        break
+    except:
+        pass
 
 alertTopic = "UPS/A/Alert"
 monitorTopic = "UPS/A/Monitor"
@@ -32,13 +37,17 @@ while(True):
         }
     }
     try:
-        ser = serial.Serial('/dev/cu.usbserial-FT3LES0E', 2400, timeout=1)
+        ser = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
         sendScan = 1
         countAlert = 0
     except:
         print("open fail")
         countAlert += 1
-        if (countAlert == 1): client.publish("UPS_Monitor/A", str({"status": 0, "module": "usb"})) 
+        if (countAlert == 1): 
+            try:
+                client.publish("UPS_Monitor/A", str({"status": 0, "module": "usb"})) 
+            except:
+                pass
         if (countAlert == 180): countAlert = 0
         time.sleep(10)
         sendScan = 0
@@ -70,11 +79,16 @@ while(True):
             if (inputFreq == 0 or inputVolt == 0):
                 noPower += 1
                 if (noPower == 1):
-                    client.publish(alertTopic, str({"status": 0, "module": "input/power"}))
-                print(noPower)
+                    try:
+                        client.publish(alertTopic, str({"status": 0, "module": "input/power"}))
+                    except:
+                        pass
             else:
                 if (noPower > 0): 
-                    client.publish(alertTopic, str({"status": 1, "module": "input/power"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 1, "module": "input/power"}))
+                    except:
+                        pass
                 noPower = 0
         except:
             pass
@@ -115,19 +129,31 @@ while(True):
             if (outputMode == "Battery (電池轉換)"):
                 batterySupply += 1
                 if (batterySupply == 1):
-                     client.publish(alertTopic, str({"status": 0, "module": "output/mode"}))
+                     try:
+                         client.publish(alertTopic, str({"status": 0, "module": "output/mode"}))
+                     except:
+                         pass    
             elif (outputMode == "Normal (市電輸入)"):
                 if (batterySupply == 1):
-                     client.publish(alertTopic, str({"status": 1, "module": "output/mode"}))
+                     try:
+                         client.publish(alertTopic, str({"status": 1, "module": "output/mode"}))
+                     except:
+                         pass    
                 batterySupply = 0
 
             if (outputPercent >= 75):
                 overLoad += 1
                 if (overLoad == 1): 
-                    client.publish(alertTopic, str({"status": 0, "module": "output/percent"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 0, "module": "output/percent"}))
+                    except:
+                        pass    
             else:
                 if (overLoad > 0): 
-                    client.publish(alertTopic, str({"status": 1, "module": "output/percent"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 1, "module": "output/percent"}))
+                    except:
+                        pass    
                 overLoad = 0
         except:
             pass
@@ -167,28 +193,46 @@ while(True):
             if (batteryStatus == 1 or batteryStatus == 1):
                 batteryLow += 1
                 if(batteryLow == 1):
-                    client.publish(alertTopic, str({"status": 0, "module": "battery/remain"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 0, "module": "battery/remain"}))
+                    except:
+                        pass    
             else:
                 if(batteryLow > 0):
-                    client.publish(alertTopic, str({"status": 1, "module": "battery/remain"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 1, "module": "battery/remain"}))
+                    except:
+                        pass    
                 batteryLow = 0
 
             if (batteryHealth == 1 or batteryHealth == 2):
                 batteryFail += 1
                 if(batteryFail == 1):
-                    client.publish(alertTopic, str({"status": 0, "module": "battery/health"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 0, "module": "battery/health"}))
+                    except:
+                        pass    
             else:
                 if(batteryFail > 0):
-                    client.publish(alertTopic, str({"status": 1, "module": "battery/health"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 1, "module": "battery/health"}))
+                    except:
+                        pass    
                 batteryFail = 0
 
             if (innerTemp >= 40):
                 overTemp += 1
                 if (overTemp == 1):
-                    client.publish(alertTopic, str({"status": 0, "module": "inner/temp"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 0, "module": "inner/temp"}))
+                    except:
+                        pass    
             else:
                 if (overTemp > 0):
-                    client.publish(alertTopic, str({"status": 1, "module": "inner/temp"}))
+                    try:
+                        client.publish(alertTopic, str({"status": 1, "module": "inner/temp"}))
+                    except:
+                        pass    
                 overTemp = 0
         except:
             pass
@@ -214,7 +258,11 @@ while(True):
             print ("下次更換時間 : " + str(nextBattery_Year) + " 年 " + str(nextBattery_Mon) + " 月 " + str(nextBattery_Day) + " 日")
             if (str(nextBattery_Year) + "-" + str(nextBattery_Mon) + "-" + str(nextBattery_Day) == str(datetime.date.today())):
                 changeBattery +=1
-                if(changeBattery == 1): client.publish(alertTopic, str({"status": 0, "module": "battery/change"}))
+                if(changeBattery == 1): 
+                    try:
+                        client.publish(alertTopic, str({"status": 0, "module": "battery/change"}))
+                    except:
+                        pass    
             else:
                 changeBattery = 0
         except:
@@ -250,7 +298,10 @@ while(True):
             sendData["battery"]["nextChange"]["month"] = nextBattery_Mon
             sendData["battery"]["nextChange"]["day"] = nextBattery_Day
             print(str(sendData).replace("\'", "\""))
-            client.publish(monitorTopic, str(sendData).replace("\'", "\""))
+            try:
+                client.publish(monitorTopic, str(sendData).replace("\'", "\""))
+            except:
+                pass
         except:
             pass
         time.sleep(1)
