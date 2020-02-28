@@ -28,8 +28,8 @@ int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
 //IPAddress server(117,185,24,248);
-char server[] = "smart-factory-robot.herokuapp.com";   // http://download.labs.mediatek.com/linkit_7697_ascii.txt
-
+// char server[] = "smart-factory-robot.herokuapp.com";
+char server[] = "smart-data-center-telegram.herokuapp.com";
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
@@ -86,10 +86,6 @@ String buildJson(int statusCount) {
   return data;
 }
 
-void userTestAlert(){
-  postAlert(1);
-}
-
 void postAlert(int statusCount){
   String PostData = buildJson(statusCount);
   Serial.println(PostData);
@@ -98,8 +94,10 @@ void postAlert(int statusCount){
   if (client.connect(server, 80)) {
       Serial.println("connected to server (POST)");
       // Make a HTTP request:
-      client.println("POST /message HTTP/1.1");
-      client.println("Host: smart-factory-robot.herokuapp.com");
+      // client.println("POST /message HTTP/1.1");
+      client.println("POST /alert/ups HTTP/1.1");
+      // client.println("Host: smart-factory-robot.herokuapp.com");
+      client.println("Host: smart-data-center-telegram.herokuapp.com");
       client.println("Accept: */*");
       client.println("Content-Type: application/json");
       client.println("Connection: close");
@@ -119,9 +117,7 @@ void postAlert(int statusCount){
 
     // if the server's disconnected, stop the client:
     if (!client.connected()) {
-        Serial.println();
         Serial.println("disconnecting from server.");
-        client.stop();
     }
 }
 
@@ -144,10 +140,13 @@ void setup() {
     pinMode(upsPin5Pin, INPUT);
     pinMode(upsPin6Pin, INPUT);
     pinMode(upsPin8Pin, INPUT);
-    attachInterrupt(userTestPin, userTestAlert, RISING); 
+    pinMode(6, INPUT);
 }
 
 void loop() {
+
+    if (digitalRead(6)) postAlert(1);
+    
     int upsAlert = 0;
 
     int upsPin1 = 0;
