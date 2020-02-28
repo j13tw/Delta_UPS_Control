@@ -45,7 +45,7 @@ while(True):
         countAlert += 1
         if (countAlert == 1): 
             try:
-                client.publish("UPS_Monitor/A", str({"status": 0, "module": "usb"})) 
+                client.publish(alertTopic, str({"status": 0, "module": "usb"})) 
             except:
                 pass
         if (countAlert == 180): countAlert = 0
