@@ -1,7 +1,7 @@
 import sys
 from decimal import getcontext, Decimal
 import serial, time
-import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import json
 
 if (not(len(sys.argv) == 2 and str(sys.argv[1]).lower() in ['a', 'b'])):
@@ -11,15 +11,6 @@ if (not(len(sys.argv) == 2 and str(sys.argv[1]).lower() in ['a', 'b'])):
 
 broker_ip = "10.20.0.19"
 broker_port = 1883
-
-while(True):
-    try:
-        client = mqtt.Client()
-        client.connect(broker_ip, broker_port)
-        break
-    except:
-        print("mqtt error")
-        time.sleep(1)
 
 alertTopic = "UPS/" + str(sys.argv[1]).upper() + "/Alert"
 monitorTopic = "UPS/" + str(sys.argv[1]).upper() + "/Monitor"
@@ -201,8 +192,9 @@ while(True):
         sendData["battery"]["nextChange"]["day"] = nextBattery_Day
         print(json.dumps(sendData))
         try:
-            client.publish(monitorTopic, json.dumps(sendData))
+            publish.single(monitorTopic, json.dumps(sendData), hostname=broker_ip, port=broker_port)
         except:
+            print("mqtt-send-data-error")
             pass
 
     time.sleep(1)
